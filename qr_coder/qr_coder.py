@@ -8,6 +8,18 @@ import shutil
 import datetime as dt
 import time as tt
 import math
+import argparse
+# import pyzbar
+# import pyqrcoder #прочекай в записях еще 2е либы под qr из окб
+
+class coder:
+	def __init__(self):
+		pass
+
+class decoder:
+	def __init__(self):
+		pass
+		
 
 def cls():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -31,7 +43,6 @@ def codeFile():
 	codeLetters = {'a':0,'b':1,'c':2,'d':3,'e':4,'f':5,'g':6,'h':7,'i':8,
 			'j':9,'k':10,'l':11,'m':12,'n':13,'o':14,'p':15,'q':16,
 			'r':17,'s':18,'t':19,'u':20,'v':21,'w':22,'x':23,'y':24,'z':25}
-
 	codeLettersKyrillic = {'а':0, 'б':1,'в':2,'г':3,'д':4,'е':5,'ж':6,'з':7,
 							'и':8,'й':9,'к':10,'л':11,'м':12,'н':13, 'о':14,
 							'п':15,'р':16,'с':17,'т':18,'у':19,'ф':20,'х':21,
@@ -63,16 +74,19 @@ def codeFile():
 	print('Your file saved into %s' %writePath)
 						
 def decodeFile():
-	print(200)
+	return "Comming soon..."
 def showStatus():
-	print(300)
+	return "Comming soon..."
 def showInput():
-	print(400)
+	return "Comming soon..."
 def terminal():
-	print(500)
+	return "Comming soon..."
 def exit():
-	print(600)
-#############
-showMenu()
-#############
-			
+	return "Comming soon..."
+
+def main(*args,**kwargs):
+	if args.__len__() == 0: showMenu()
+	else: return None 
+
+if __name__ == "__main__":
+	main(sys.argv)
