@@ -17,6 +17,7 @@ def getConfig():
 config = getConfig()
 bot = telebot.TeleBot(config["token"])
 apihelper.proxy = config["proxy"]
+BOT_ID = config["botID"]
 
 # @bot.message_handler(commands=["start", "help", "test"])
 # def send_welcome(message):  
@@ -32,7 +33,7 @@ def printMessageFromChannel(message):
 	# bot.send_message(message.chat.id, "response: {}".format(message.chat.id))
 	text = parseSignal(message.text)
 	response = "\n".join(map(str,[message.chat.id, str(text)]))
-	bot.send_message(config["botID"], "response: {}".format(response))
+	bot.send_message(BOT_ID, "response: {}".format(response))
 
 @bot.message_handler(commands = ["getBotID"])
 def printBotId(message):
