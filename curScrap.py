@@ -14,7 +14,7 @@ def getHtml(url):
 
 
 def main():
-	url = 'https://coinmarketcap.com/'
+	url = 'https://coinmarketcap.com'
 	html = getHtml(url)
 	allLinks = getAllLinks(html)
 	print(allLinks)
