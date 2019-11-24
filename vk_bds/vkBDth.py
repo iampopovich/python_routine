@@ -23,6 +23,7 @@ def getFriendlist(file):
 		name = None
 		id_ = None
 		href = None
+		# check_param
 	pass
 
 def saveResult(result):
