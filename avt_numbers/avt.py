@@ -14,50 +14,68 @@ class Bot:
 		self.browser = webdriver.Chrome()
 
 	def navigate(self,url):
-		#try:
-		self.browser.get(url)
-		buttonNumber = self.browser.find_element_by_css_selector("a[class^=\"button item-phone-button\"][data-side =\"card\"]")
-		buttonNumber.click()
-		tt.sleep(5)
-		imgSource = buttonNumber.find_element_by_tag_name("img").get_attribute("src")
-		self.browser.quit() #debug stage 
-		return imgSource
-#		except Exception as e: return e
-		# finally : self.browser.quit() #debug stage 
+		try: self.browser.get(url)
+		except Exception as e: raise e
+		# finally: self.browser.quit() 
 
-	def saveImage(self, imageSource):
-		imgData = bytes(imageSource.split(",")[1], "utf8")
-		with open("imageToSave.png", "wb") as fh:
-			fh.write(base64.decodebytes(imgData))
-		# # with open("image_number.jpg", "wb") as fout:
-		# 	fout.write(imgdata)
+	def getInfo(self):
+		phoneNumber = self.getPhoneNumber()
+		price = self.getPrice()
+		header = self.getHeader()
+		place = self.getPlace()
+		info = {"phoneNumber":phoneNumber,
+				"price":price,
+				"header":header,
+				"place":place}
+		return info
 
-	def decodeBase64(self,data,altchars=b'+/'):
-		data = re.sub(rb'[^a-zA-Z0-9%s]+' % altchars, b'', bytearray(data, "utf-8"))  # normalize
-		missing_padding = len(data) % 4
-		if missing_padding:
-			data += b'='* (4 - missing_padding)
-		return base64.b64decode(data, altchars)
+	def getPhoneNumber(self):
+		try:
+			buttonNumber = self.browser.find_element_by_css_selector("a[class^=\"button item-phone-button\"][data-side =\"card\"]")
+			buttonNumber.click()
+			tt.sleep(5)
+			imgSource = buttonNumber.find_element_by_tag_name("img").get_attribute("src")
+			imgData = bytes(imgSource.split(",")[1], "utf8")
+			with open("imageToSave.png", "wb") as fh:
+				fh.write(base64.decodebytes(imgData))
+		except Exception as ex: raise ex
+		finally: return 
 
-	def parseNumber(self, inputStream):
-		pass
+	def getPrice(self):
+		try:
+			priceValue = self.browser.find_element_by_class_name("js-item-price").get_attribute("content")
+			priceCurrency = self.browser.find_element_by_css_selector("span[itemprop=\"priceCurrency\"]").get_attribute("content")
+			return " ".join([priceValue,priceCurrency])
+		except Exception as ex:
+			return ex
+
+	def getHeader(self):
+		ticketHeader = self.browser.find_element_by_class_name("title-info-title-text").text
+		return ticketHeader
+
+	def getPlace(self):
+		ticketAddress = self.browser.find_element_by_class_name("item-address__string").text
+		return ticketAddress
 
 	def saveResult(self):
 		pass
+
+	def dispose(self):
+		self.quit()
 
 def main():
 	urlList = ["https://www.avito.ru/sankt-peterburg/kvartiry/2-k_kvartira_44.7_m_55_et._1805682679"]
 	b = Bot()
 	for url in urlList:
-		# try:
-		imgSource = b.navigate(url)
-		b.saveImage(imgSource)
-			# phoneNumber = b.parseNumber(localImage)
-			# b.saveResult()
-		# except Exception as ex:
-		# 	return ex
-		# 	continue
-	return None
+		try:
+			b.navigate(url)
+			info = b.getInfo()
+			print(info)
+			b.saveResult(info)
+		except Exception as ex:
+			return ex
+			continue
+	b.dispose()
 
 if __name__ == "__main__":
 	main()
