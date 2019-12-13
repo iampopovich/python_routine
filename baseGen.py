@@ -1,39 +1,40 @@
 import sys
 import string
 import random
+from datetime import datetime
 
-def genName( size = 30, chars = string.ascii_letters + string.digits):
-	return "".join(random.choice(chars) for i in range(size)) 
+def genName( size = 30, chars = string.ascii_letters + string.digits + " "):
+	return "".join(random.choice(chars) for i in range(random.randint(5,size))) 
 
-def genNumber( size = 15, chars = string.ascii_digits):
-	return "".join(random.choise(chars) for i in range(size))
+def genPhoneNumber( size = 15, chars = string.digits):
+	return "".join(random.choice(chars) for i in range(random.randint(9,size)))
 
 def genEmail(size = 10 , chars = string.ascii_letters + string.digits):
-	name = "".join(random.choice(chars) for i in range(size)) 
-	domain = "".join(random.choice(chars) for i in range(size))
-	region = "".join(random.choice(string.ascii_letters) for i in range(3))
+	name = "".join(random.choice(chars) for i in range(random.randint(5,size))) 
+	domain = "".join(random.choice(chars) for i in range(random.randint(5,size)))
+	region = "".join(random.choice(string.ascii_letters) for i in range(random.randint(2,3)))
 	return "{0}@{1}.{2}".format(name, domain,region)
 	
-def genCardNum():
-	pass
+def genCardNum(size = 16 , chars = string.digits):
+	return "".join(random.choise(chars) for i in range(size))	
 
 def genPoints():
-	pass
+	return(random.randint(0, 1000000))
 
 def genBirthDate():
-	pass
-
+	currentTimestamp = int(datetime.now().timestamp())
+	timestamp = random.randint(0, currentTimestamp)
+	return datetime.fromtimestamp(timestamp).strftime("%d.%m.%Y")
+	
 def main(args):
 	with open ("deg.csv", "a") as out:
-		try:
-			for i in range (args[1]):
-				name = genName()
-				number = genNumber()
-				email = genEmail()
-				points = genPoints()
-				bday = genBirthDate()
-			out.write(";".join([name,number,email,points,bday]))
-		except: return "oops"
+		for i in range (int(args[1])):
+			name = genName()
+			number = genPhoneNumber()
+			email = genEmail()
+			points = genPoints()
+			bday = genBirthDate()
+			out.write(";".join(map(str,[name,number,email,points,bday]))+"\n")
 
 if __name__ == "__main__":
 	main(sys.argv)
