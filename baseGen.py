@@ -1,4 +1,5 @@
 import sys
+import os
 import string
 import random
 from datetime import datetime
@@ -16,7 +17,7 @@ def genEmail(size = 10 , chars = string.ascii_letters + string.digits):
 	return "{0}@{1}.{2}".format(name, domain,region)
 	
 def genCardNum(size = 16 , chars = string.digits):
-	return "".join(random.choise(chars) for i in range(size))	
+	return "".join(random.choice(chars) for i in range(size))	
 
 def genPoints():
 	return(random.randint(0, 1000000))
@@ -27,14 +28,17 @@ def genBirthDate():
 	return datetime.fromtimestamp(timestamp).strftime("%d.%m.%Y")
 	
 def main(args):
+	delim = args[2]
+	if os.path.isfile("deg.csv"): os.unlink("deg.csv")
 	with open ("deg.csv", "a") as out:
 		for i in range (int(args[1])):
 			name = genName()
 			number = genPhoneNumber()
 			email = genEmail()
+			card = genCardNum()
 			points = genPoints()
 			bday = genBirthDate()
-			out.write(";".join(map(str,[name,number,email,points,bday]))+"\n")
+			out.write(delim.join(map(str,[name,number,email,card,points,bday]))+"\n")
 
 if __name__ == "__main__":
 	main(sys.argv)
