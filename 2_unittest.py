@@ -6,33 +6,33 @@ import unittest
 class TestREST(unittest.TestCase):
 
 	def setUp(self):
-		self.url = 'https://www.goog0le.com'
+		self.url = 'https://www.google.com'
 		self.timeout = 300
-		self.status = 200
-		self.text = 'goog0le'
+		self.status = 2000
+		self.text = 'go00ogle'
 
-	def check_time_response_get(self):
+	def test_time_response_get(self):
 		r = requests.get(self.url)
 		self.assertLessEqual(r.elapsed.total_seconds(), self.timeout/1000 )
 
-	def check_time_response_post(self):
+	def test_time_response_post(self):
 		r = requests.post(self.url)
 		self.assertLessEqual(r.elapsed.total_seconds(),self.timeout/1000)
 
-	#response status code 
-	def check_response_status(self):
+	def test_response_status(self):
 		r = requests.get(self.url)
 		self.assertEqual(r.status_code, self.status)
 
-	#response text contains something brrr
-	def check_response_contains(self):
+	def test_response_contains(self):
 		r = requests.get(self.url)
 		contains = re.search(self.text,r.text)
-		self.assertEqual(bool(contains.group(0), True))
+		self.assertIsNotNone(contains)
 
-	def runTest(self):
-		self.check_response_status()
-		self.check_response_contains()
+	# def runTest(self):
+	# 	self.check_response_status()
+	# 	self.check_response_contains()
+
+
 # test_get = check_time_response_get('https://www.goog0le.com', 300)
 # test_status = check_response_status('https://www.goo--gle.com', 300)
 # test_contains = check_response_contains('https://www.google.com', 'go0gle')
@@ -42,4 +42,5 @@ class TestREST(unittest.TestCase):
 # print(test_contains,'\n')
 
 if __name__ ==  '__main__':
-	unittest.TextTestRunner().run(TestREST())
+	# unittest.TextTestRunner().run(TestREST())
+	unittest.main()
