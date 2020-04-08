@@ -12,6 +12,7 @@ def init_parser():
 
 def init_slicer(block,size):
 	out = []
+	block = [0,1,2,3,4,5,6,7,8,9]
 	chunk = block.__len__()//size
 	for _ in range(0,size):
 		if _ == size - 1: 
@@ -29,8 +30,10 @@ def timeit(func):
 		return t2
 	return wrapper
 
-def worker():
-
+def worker(chunk):
+	for n in list(chunk):
+		chunk[chunk.index(n)] = n**2
+	print(chunk)
 	return None
 
 def main():
@@ -38,7 +41,11 @@ def main():
 	args = parser.parse_args()
 	block = [random.random() for i in range(args.b)]
 	chunks = init_slicer(block, args.t)
-	print('\n'.join(map(str,chunks)))
+	threads = []
+	for ch in chunks:
+		t = threading.Thread(target=worker, args=(ch,))
+		threads.append(t)
+		t.start()
 	return None
 
 if __name__ == '__main__':
