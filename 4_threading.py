@@ -12,10 +12,13 @@ def init_parser():
 
 def init_slicer(block,size):
 	out = []
-	chunk = math.ceil(block.__len__()/size)
+	chunk = block.__len__()//size
 	for _ in range(0,size):
-		out.append(block[:chunk])
-		block = block[chunk:]
+		if _ == size - 1: 
+			out.append(block)
+		else:
+			out.append(block[:chunk])
+			block = block[chunk:]
 	return out
 
 def timeit(func):
