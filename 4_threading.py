@@ -23,16 +23,16 @@ def init_slicer(block,size):
 	return out
 
 def timeit(func):
-	def wrapper():
-		t1 = time.now()
-		func()
-		t2 = time.now() - t1
-		return t2
+	def wrapper(*args, **kw):
+		t1 = time.time()
+		func(*args, **kw)
+		t2 = time.time() - t1
+		print(t2)
 	return wrapper
 
+@timeit
 def worker(chunk):
 	chunk = list(map(lambda x: x**2, chunk))
-	print(chunk)
 	return None
 
 def main():
@@ -49,3 +49,19 @@ def main():
 
 if __name__ == '__main__':
 	main()
+
+#python3 4_threading.py  -b 9000000
+#1 : 
+	#7.05718994140625e-05
+#2 : 
+	#5.7220458984375e-05
+	#2.1457672119140625e-05
+#3 : 
+	# 3.314018249511719e-05
+	# 2.5033950805664062e-05
+	# 1.5020370483398438e-05
+#4 :
+	# 3.147125244140625e-05
+	# 2.5033950805664062e-05
+	# 2.8133392333984375e-05
+	# 2.765655517578125e-05
