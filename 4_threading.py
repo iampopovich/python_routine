@@ -12,7 +12,6 @@ def init_parser():
 
 def init_slicer(block,size):
 	out = []
-	block = [0,1,2,3,4,5,6,7,8,9]
 	chunk = block.__len__()//size
 	for _ in range(0,size):
 		if _ == size - 1: 
