@@ -31,8 +31,7 @@ def timeit(func):
 	return wrapper
 
 def worker(chunk):
-	for n in list(chunk):
-		chunk[chunk.index(n)] = n**2
+	chunk = list(map(lambda x: x**2, chunk))
 	print(chunk)
 	return None
 
