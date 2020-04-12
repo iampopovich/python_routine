@@ -1,8 +1,7 @@
-import threading
-import random
-import time
+from threading import Thread
+from random import random
+from time import time
 import argparse
-import math
 
 def init_parser():
 	parser = argparse.ArgumentParser()
@@ -23,9 +22,9 @@ def init_slicer(block,size):
 
 def timeit(func):
 	def wrapper(*args, **kw):
-		t1 = time.time()
+		t1 = time()
 		func(*args, **kw)
-		t2 = time.time() - t1
+		t2 = time() - t1
 		print(t2)
 	return wrapper
 
@@ -37,30 +36,32 @@ def worker(chunk):
 def main():
 	parser = init_parser()
 	args = parser.parse_args()
-	block = [random.random() for i in range(args.b)]
+	block = [random() for i in range(args.b)]
 	chunks = init_slicer(block, args.t)
 	threads = []
 	for ch in chunks:
-		t = threading.Thread(target=worker, args=(ch,))
+		t = Thread(target=worker, args=(ch,))
 		threads.append(t)
 		t.start()
+	for t in threads:
+		t.join()
 	return None
 
 if __name__ == '__main__':
 	main()
 
-#python3 4_threading.py  -b 9000000
+#python3 4_threading.py -b 9000000
 #1 : 
-	#7.05718994140625e-05
+	# 5.078776597976685
 #2 : 
-	#5.7220458984375e-05
-	#2.1457672119140625e-05
+	# 5.529098033905029
+	# 5.7889440059661865
 #3 : 
-	# 3.314018249511719e-05
-	# 2.5033950805664062e-05
-	# 1.5020370483398438e-05
+	# 4.884185075759888
+	# 5.268436908721924
+	# 5.395357847213745
 #4 :
-	# 3.147125244140625e-05
-	# 2.5033950805664062e-05
-	# 2.8133392333984375e-05
-	# 2.765655517578125e-05
+	# 5.476662874221802
+	# 5.89403772354126
+	# 6.026142358779907
+	# 6.171136140823364
