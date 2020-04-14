@@ -1,7 +1,6 @@
 import re
 import unittest
-test = __import__('8_code_to_test') #мой факап с именованием файлов лол
-# import _8_code_to_test as test
+test = __import__('8_code_to_test')
 
 URL_GET = 'https://www.google.com'
 URL_POST = 'http://127.0.0.1'
@@ -10,13 +9,13 @@ TIMEOUT_POST = 200
 STATUS = 200
 TEXT = 'google'
 
-class testResponseStatus(unittest.TestCase): #remember pep-8 and refactor it !
+class testResponseStatus(unittest.TestCase):
 
 	def test_response_status(self):
 		r = test.send_request_get(URL_GET)
 		self.assertEqual(r.status_code, STATUS)
 
-class testResponseoContains(unittest.TestCase): #remember pep-8 and refactor it !
+class testResponseoContains(unittest.TestCase):
 
 	def test_response_contains(self):
 		r = test.send_request_get(URL_GET)

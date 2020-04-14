@@ -2,14 +2,8 @@ import re
 import threading
 import unittest
 
-
 class regexTestcase(unittest.TestCase):
 
-	# def __init__(self, *args,**kw):
-	# 	# super().__init__(*args)
-	# 	self.text = None
-	# 	self.regex = None
-	# 	self.count = None
 	def setUp(self):
 		self.text = 'hehehehhhehhehhe'
 		self.part = 'he'
@@ -36,8 +30,4 @@ class regexTestcase(unittest.TestCase):
 		self.assertGreater(len(result), self.count)
 
 if __name__ == '__main__':
-	# test = regexTestcase()
-	# test.text = 'hehehehhhehhehhe'
-	# test.part = 'he'
-	# test.count = 2
 	unittest.main()
