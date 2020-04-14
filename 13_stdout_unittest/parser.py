@@ -1,6 +1,9 @@
 import os
 import sys
 import subprocess
+import unittest
+
+#АССЕРТ true НА if match in line  
 
 def parser(proc, match = 2):
 	line = proc.stdout.readline()
