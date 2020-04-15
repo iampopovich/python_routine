@@ -1,17 +1,23 @@
 import os
 import sys
 import subprocess
+import threading
 import unittest
 
-#АССЕРТ true НА if match in line  
+#АССЕРТ true НА if match in line 
 
-def parser(proc, match = 2):
-	line = proc.stdout.readline()
-	if match in line: prinnt('{} FOUND!'.format(match))
+def parser(proc, match = 100):
+	for line in proc.stdout:
+		if match in line:
+			print('{} FOUND!'.format(match))
+
 
 def main():
-	proc = subprocess.Popen(['x-terminal-emulator','generator.sh'],stdout=subprocess.PIPE)
-	while True: parser(proc, '3')
+	# proc = subprocess.Popen(['/bin/sh','-c','{}/generator.sh'.format(os.getcwd())],stdout=subprocess.PIPE, shell = True)
+	proc = subprocess.Popen(['/bin/sh','echo 100'],shell=True, stdout = subprocess.PIPE)
+	t = threading.Thread(target = parser, args=(proc,'3',), daemon=True)
+	t.start()
+	t.join()
 		
 if __name__ == '__main__':
 	main()
