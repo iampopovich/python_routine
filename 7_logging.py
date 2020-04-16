@@ -10,18 +10,22 @@ def init_argparser():
 	return parser
 
 def init_slicer(block, size):
+	logging.basicConfig(level = logging.INFO)
+	logging.info('started slicer initialization...')
 	out = []
 	chunk = block.__len__()//size
 	for _ in range (0, size):
-		if _ == size - 1: out.append(block)
+		if _ == size - 1: 
+			out.append(block)
 		else:
 			out.append(block[:chunk])
 			block = block[chunk:]
+		logging.info('slice {} appended...'.format(_+1))
+	logging.info('slicing finished successful!')
 	return out
 
 def worker(data):
 	data = list(map(lambda x: x+1 , data))
-	print(data)
 	return data
 
 def main():
