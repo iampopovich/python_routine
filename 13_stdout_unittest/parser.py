@@ -11,7 +11,7 @@ import time
 def writer(file):
 	while True:
 		with open(file,'a') as f:
-			f.write('{}'.format(random.randint(0,10)))
+			f.write('{}\n'.format(random.randint(0,10)))
 		time.sleep(1)
 
 def parser_proc(proc, match = '100'):
@@ -31,20 +31,21 @@ def parser_file(file,match = '100'):
 			with open(file,'r') as f:
 				if match in f.readlines()[-1:]:
 					print('{} was found!'.format(match))#мб вот здесь лок аута
+					# sys.exit()
 		except Exception as ex:
 			logging.error('{}'.format(ex))
 			continue
 
 def main():
 	file = 'output.log'
-	# proc = subprocess.Popen(['/bin/sh','-c','{}/generator.sh'.format(os.getcwd())],stdout=subprocess.PIPE, shell = True, encoding = 'utf-8')
 	threads = []
-	t_writer = threading.Thread(target = writer, args=(file,))
-	# t_parser = threading.Thread(target = parser_file, args=(file,'3',))
+	# proc = subprocess.Popen(['/bin/sh','-c','{}/generator.sh'.format(os.getcwd())],stdout=subprocess.PIPE, shell = True, encoding = 'utf-8')
+	t_writer = threading.Thread(target = writer, args=(file,),daemon = True)
+	t_parser = threading.Thread(target = parser_file, args=(file,'3',), daemon=True)
 	threads.extend([t_writer,t_parser])
-	for t in threads:
-		t.start()
-		t.join()
+	for t in threads: t.start()
+	for t in threads: t.join()
+
 		
 if __name__ == '__main__':
 	main()
