@@ -7,21 +7,18 @@ def init_server():
 	conn, addr = sock.accept() 
 	return conn, addr
 	
-
 def run_server(connection, address):
 	try:
 		print('server started...')
 		while True:
 			data = connection.recv(1024)
 			if not data: break
-			# if '--help' in data: show_help(conn)
-			#conn.send(data.upper())
-		# conn.close()
+			connection.send(data.upper())
 	except Exception as ex:
-		conn.close()
+		connection.close()
 		raise ex
 	finally:
-		conn.close()
+		connection.close()
 
 def main():
 	conn, addr = init_server()

@@ -10,7 +10,7 @@ def init_client():
 		else:
 			sock.send(bytes(info,'utf-8'))
 			data = sock.recv(1024)
-
+			print(data)
 	sock.close()
 
 def main():
