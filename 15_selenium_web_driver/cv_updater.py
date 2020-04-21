@@ -44,8 +44,6 @@ def send_reply(browser, config):
 			try:
 				if replied == replies: break
 				reply_vacancy = v.find_element_by_xpath('.//a[@data-qa="vacancy-serp__vacancy_response"]')
-				print(v, reply_vacancy)
-				# reply_vacancy.click()
 				browser.execute_script("arguments[0].click();", reply_vacancy)
 				time.sleep(5)
 				reply_message = browser.find_element_by_xpath('/html/body/div[9]/div[1]/div/form/div[2]/div[2]/span/span') #факап
@@ -57,7 +55,7 @@ def send_reply(browser, config):
 				time.sleep(5)
 				replied+=1
 			except Exceptions as ex:
-				raise ex
+				# raise ex
 				continue #глушу пока
 	except Exception as ex:
 		browser.quit()
