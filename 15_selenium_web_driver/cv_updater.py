@@ -1,6 +1,7 @@
 from selenium import webdriver
 import json
 import time
+import logging
 
 def get_config():
 	with open('cred.cfg', 'r') as c:
@@ -26,11 +27,13 @@ def autorize(browser, config):
 		browser.exit()
 
 def update_cv(browser,url):
-	browser.get(url)
-	time.sleep(10)
-# <button class="bloko-button bloko-button_primary bloko-button_stretched" type="button" disabled="" data-qa="resume-update-button">Обновить дату </button>
-
-	return None
+	try:
+		browser.get(url)
+		time.sleep(10)
+		button_submit = browser.find_element_by_xpath('//input[@data-qa="resume-update-button"]')
+		button_submit.click()
+	except Exception as ex:
+		raise ex
 
 def main():
 	while True:
@@ -40,7 +43,7 @@ def main():
 			browser = autorize(browser,config)
 			update_cv(browser, config['resumeID'])
 			browser.close()
-			time.sleep(20)
+			time.sleep(14450) #ласно правилам ХХ можно апдейтить CV  раз в 4 часа
 		except:
 			browser.close()
 	return None
