@@ -36,7 +36,7 @@ def send_reply(browser, config):
 		resume_id = config['resumeID']
 		reply_text = config['replyMessage']
 		replies = config['reply']
-		browser.get('https://spb.hh.ru/search/vacancy?order_by=publication_time&clusters=true&resume=f{}&enable_snippets=true'.format(resume_id))
+		browser.get('https://spb.hh.ru/search/vacancy?order_by=publication_time&clusters=true&resume={}&enable_snippets=true'.format(resume_id))
 		time.sleep(10)
 		list_vacancy = browser.find_elements_by_class_name('vacancy-serp-item')
 		replied = 0
@@ -65,8 +65,11 @@ def update_cv(browser,resume_id):
 	try:
 		browser.get('https://spb.hh.ru/resume/{}'.format(resume_id))
 		time.sleep(10)
-		button_submit = browser.find_element_by_xpath('//input[@data-qa="resume-update-button"]')
-		button_submit.click()
+		button_submit = browser.find_element_by_xpath('//button[@data-qa="resume-update-button"]')
+		browser.execute_script("arguments[0].click();", button_submit)
+		# actions = ActionChains(browser)
+		# actions.move_to_element(button_submit).perform()
+		# button_submit.click()
 	except Exception as ex:
 		raise ex
 
