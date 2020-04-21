@@ -26,6 +26,12 @@ def autorize(browser, config):
 	except:
 		browser.exit()
 
+def send_reply(browser, url, reply_num):
+	return None
+
+def add_favorite(browser,url):
+	return None
+
 def update_cv(browser,url):
 	try:
 		browser.get(url)
