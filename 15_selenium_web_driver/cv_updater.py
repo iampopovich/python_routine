@@ -28,7 +28,7 @@ def autorize(browser, config):
 		button_submit.click()
 		return browser
 	except Exception as ex:
-		browser.exit()
+		browser.quit()
 		raise ex
 
 def send_reply(browser, config):
@@ -41,21 +41,26 @@ def send_reply(browser, config):
 		list_vacancy = browser.find_elements_by_class_name('vacancy-serp-item')
 		replied = 0
 		for v in list_vacancy:
-			if browser.find_element_by_xpath('//a[@data-qa="vacancy-serp__vacancy_response"]'):
+			try:
 				if replied == replies: break
-				reply_vacancy = browser.find_element_by_xpath('//a[@data-qa="vacancy-serp__vacancy_response"]')
-				reply_vacancy.click()
-				reply_message = browser.find_element_by_xpath('//span[@data-qa="vacancy-response-letter-toggle"]')
+				reply_vacancy = v.find_element_by_xpath('.//a[@data-qa="vacancy-serp__vacancy_response"]')
+				print(v, reply_vacancy)
+				# reply_vacancy.click()
+				browser.execute_script("arguments[0].click();", reply_vacancy)
+				time.sleep(5)
+				reply_message = browser.find_element_by_xpath('/html/body/div[9]/div[1]/div/form/div[2]/div[2]/span/span') #факап
 				reply_message.click()
-				reply_message_text = browser.find_element_by_name('letter')
+				reply_message_text = browser.find_element_by_xpath('/html/body/div[9]/div[1]/div/form/div[2]/div[2]/div/textarea') #факап
 				reply_message_text.send_keys(reply_text)
-				button_submit = browser.find_element_by_xpath('//button[@data-qa="vacancy-response-submit-popup"]')
-				button.click()
+				button_submit = browser.find_element_by_xpath('/html/body/div[9]/div[1]/div/form/div[4]/div/button') #факап
+				button_submit.click()
 				time.sleep(5)
 				replied+=1
-			if browser.find_element_by_xpath('//a[@data-qa="vacancy-serp__vacancy_responded"]'): continue
+			except Exceptions as ex:
+				raise ex
+				continue #глушу пока
 	except Exception as ex:
-		browser.exit()
+		browser.quit()
 		raise ex
 
 def add_favorite(browser,resume_id):
@@ -66,7 +71,7 @@ def update_cv(browser,resume_id):
 		browser.get('https://spb.hh.ru/resume/{}'.format(resume_id))
 		time.sleep(10)
 		button_submit = browser.find_element_by_xpath('//button[@data-qa="resume-update-button"]')
-		browser.execute_script("arguments[0].click();", button_submit)
+		if button_submit.is_enabled(): browser.execute_script("arguments[0].click();", button_submit)
 		# actions = ActionChains(browser)
 		# actions.move_to_element(button_submit).perform()
 		# button_submit.click()
@@ -80,11 +85,11 @@ def main():
 			browser = init_browser(config['browserPath'])
 			browser = autorize(browser, config)
 			update_cv(browser, config['resumeID'])
-			if int(config['reply']) != 0: send_reply(browser, config)
-			browser.close()
+			if config['reply'] != 0: send_reply(browser, config)
+			browser.quit()
 			time.sleep(14450) #ласно правилам ХХ можно апдейтить CV  раз в 4 часа
 		except Exception as ex:
-			browser.close()
+			browser.quit()
 			raise ex
 	return None
 
