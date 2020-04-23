@@ -7,7 +7,10 @@ import logging
 import random
 import time
 
-#АССЕРТ true НА if match in line 
+
+# имеет смысл описать парсер классом
+
+
 def writer(file):
 	while True:
 		with open(file,'a') as f:
