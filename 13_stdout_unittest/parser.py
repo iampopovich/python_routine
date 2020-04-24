@@ -1,7 +1,8 @@
 import os
 import sys
 import subprocess
-import logging
+# import logging
+# import unittest
 
 def parser_proc(command, file, proc_id = None):
 	proc = subprocess.Popen([command],stdout=subprocess.PIPE, shell = True, encoding = 'utf-8')	
