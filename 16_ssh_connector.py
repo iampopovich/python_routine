@@ -12,27 +12,26 @@ def get_credentials():
 	h = input('type host IP-address:')
 	return u,p,h
 
-def init_tracker(user, ssecret, host, file_log = 'output.log', file_err = 'error.log'):	
+def init_tracker(user, secret, host, file_log = 'output.log', file_err = 'error.log'):	
 	client = paramiko.SSHClient()
 	client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 	client.connect(hostname=host, username=user, password=secret)
 	stdin, stdout, stderr = client.exec_command('')
-	while True:
-		data_out = stdout.readline()
-		data_err = stderr.readline()
-		if data_out:
-			sys.stdout.write(line)
-			sys.stdout.flush()
-			with open(file,'a') as out:
-	 			out.write('{}'.format(line))
-		if line.__len__() == 0 and proc.poll() is not None:
-			break 
+	for data_out in iter(stdout.readline,''):
+		data = data_out.decode('utf-8')
+		if data == '': break
+		with open(file_log,'a') as out:
+			out.write('{}'.format(data))
+	for data_err in iter(stderr.readline,''):
+			data = data_err.decode('utf-8')
+			if data_err != '':
+				with open(file_err,'a') as err:
+					err.write('{}'.format(data_err.decode('utf-8')))
+				break
 	client.close()
 	return None
 
 def main():
-	# file_log = 'output.log'
-	# file_err = 'error.log'
 	usr, pwd, hst = get_credentials()
 	init_tracker(usr,pwd,hst)	
 	return None
