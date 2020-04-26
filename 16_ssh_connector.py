@@ -37,5 +37,5 @@ def main():
 	init_tracker(usr,pwd,hst)	
 	return None
 
-if __name__:'__main__':
-	mani()
+if __name__=='__main__':
+	main()
