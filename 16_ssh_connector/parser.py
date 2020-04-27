@@ -43,15 +43,20 @@ class Parser:
 	def set_file_error(self, file_err = 'error.log'):
 		self.file_err = file_err
 
+	def set_command(self):
+		self.ssh_command = input('type command: ')
+
 	def set_credentials(self):
 		self.user = input('type your username: ')
 		self.secret = getpass.getpass('type your password: ')
-		self.host = input('type host IP-address:')
+		self.host = input('type host IP-address: ')
 		
 	def init_tracker(self):	
 		try:
-			stdin, stdout, stderr = self.conn.exec_command('export TERM=linux-c-nc; minicom -D/dev/stb/11.2114')
+			stdin, stdout, stderr = self.conn.exec_command(self.ssh_command)
+			# list_rows = []
 			for data_out in iter(stdout.readline,''):
+				data_out = re.sub(r'\[[0-9]{2};[0-9]{2}[a-zA-Z]{1}','',data_out)
 				with open(self.file_log,'a') as out:
 					out.write('{}'.format(data_out))
 			for data_err in iter(stderr.readline,''):
@@ -74,6 +79,7 @@ def init_argparser ():
 def main():
 	parser = Parser()
 	parser.set_credentials() #если кваргс пустой - то инпутим, если заполненный - то берем из кваргс
+	parser.set_command()
 	parser.init_connection()
 	parser.init_tracker()
 	# init_argparser()
