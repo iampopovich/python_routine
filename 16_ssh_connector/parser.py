@@ -54,9 +54,8 @@ class Parser:
 	def init_tracker(self):	
 		try:
 			stdin, stdout, stderr = self.conn.exec_command(self.ssh_command)
-			# list_rows = []
 			for data_out in iter(stdout.readline,''):
-				data_out = re.sub(r'\[[0-9]{2};[0-9]{2}[a-zA-Z]{1}','',data_out)
+				data_out = re.sub(r'\[[0-9]{2};[0-9]{1,2}[a-zA-Z]{1}','',data_out)
 				with open(self.file_log,'a') as out:
 					out.write('{}'.format(data_out))
 			for data_err in iter(stderr.readline,''):
