@@ -82,8 +82,10 @@ def main():
 	parser.init_connection()
 	if args['level']:
 		parser.set_level(args['level'])
+	else: parser.set_level()
 	if args['app']:
 		parser.set_app(args['app'])
+	else: parser.set_app()
 	parser.init_tracker()
 
 if __name__=='__main__':
