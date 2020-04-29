@@ -32,6 +32,12 @@ class Splitter():
 
 		return None
 
+def init_argparser():
+	parser = argparse.ArgumentParser()
+	parser.add_argument('-lvl', metavar='LEVEL', type = str, required = False) #e.g. [ERROR]/[ERR]/[E]/etc.
+	parser.add_argument('-app', metavar = 'APP', type = str, required = False) #e.g. [LOGWRITER]/[LOGGER]/[LOG]/etc. 
+	return parser
+
 def main():
 	# parser
 	split = Splitter()
@@ -42,3 +48,4 @@ def main():
 
 if __name__ == '__main__':
 	main()
+sshpass -p q7KtsXLQzkhAj ssh zodiac@30.255.240.238 pwreg forceset DGroup 209
