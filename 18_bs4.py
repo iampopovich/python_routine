@@ -39,13 +39,14 @@ class Scrapper:
 				output.write("%s\n"%("\n".join(results)))
 			glob_index_google+=1
 
-	def generate_requests(args): 
-		result = []
-		if "-kw" in args:
-			keywords = None
-		if "-fkw" in args:
-			with open("keywordFile","r") as fkw:
-				keywords = fkw.readlines().split()
+	def generate_requests_from_keywords(keywords): 
+		return keywords.permutation(4)
+
+	def generate_requests_from_file(file):
+		keywords = []
+		with open(file, 'r') as f:
+			json_load = json.load(f)
+			keywords = json_load['keywords']
 		return keywords.permutation(4)
 
 	def get_config():
@@ -56,7 +57,8 @@ def init_argparser():
 
 def main():
 	argparser = init_argparser()
-	scraper = Scrapper()
+	scrapper = Scrapper()
+	scrapper.generate_requests(keywords)
 
 	while True:
 		try:
