@@ -23,6 +23,21 @@ class Scrapper:
 		self.keywords = None
 		self.level = 2
 
+	def set_user_agent(self):
+		self.user_agent = user_agent.generate_user_agent()
+
+	def get_headers(self, lang = ''):
+		headers_Get = {
+			'User-Agent': self.user_agent,
+			'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+			'Accept-Language': 'en-US,en;q=0.5',
+			'Accept-Encoding': 'gzip, deflate',
+			'DNT': '1',
+			'Connection': 'keep-alive',
+			'Upgrade-Insecure-Requests': '1'
+		}
+		return headers_Get
+
 	def set_url_target(self,url):
 		# target = re.search(r"baehr.ru|baehrrussia|behrru|podologclub|nautilus2000|uchebnyj_tsentr_nautilus|pedicurenautilus|pedicure_nautilus|www.krasota.spb.ru",resp)
 		self.url_target = url
@@ -30,17 +45,26 @@ class Scrapper:
 	def set_level(self,level):
 		self.level = level
 
-	def init_scrapper(self, engine, queries):
-		for i,query in enumerate(queries):
-			time.sleep(30)
+	def set_engine(self, engine):
+		if engine == 'google': self.engine = 'https://www.google.com/search?q='
+		if engine == 'yandex': self.engine = 'https://yandex.ru/search/?text='
+		if engine == 'duckduck': self.engine = 'https://duckduckgo.com/?q='
+
+	def scrap_queries(self, queries):
+		s = requests.Session()
+		for i,q in enumerate(queries):
+			query = '+'.join(q)
 			results = []
-			response = search(query, 
-								tld="co.in", 
-								num=80, 
-								start = 0,
-								stop=79, 
-								pause=70, 
-								user_agent = uagent)
+			response = requests.get(self.engine + query, headers = self.get_headers())
+			soup = BeautifulSoup(r.text, "html.parser")
+			# output = []
+			# for searchWrapper in soup.find_all('h3', {'class':'r'}): #this line may change in future based on google's web page structure
+			# 	url = searchWrapper.find('a')["href"] 
+			# 	text = searchWrapper.find('a').text.strip()
+			# 	result = {'text': text, 'url': url}
+			# 	output.append(result)
+
+
 			for position,resp in enumerate(response):
 				if target is None: continue
 				else:
@@ -48,7 +72,7 @@ class Scrapper:
 					results.append(result)
 			with open(self.path_file_out,'a') as output:
 				output.write("%s\n"%("\n".join(results)))
-			glob_index_google+=1
+			time.sleep(30)
 
 	def set_keywords(self, keywords):
 		result = []
@@ -98,7 +122,8 @@ def main():
 	args = parser.parse_arguments()
 	scrapper = Scrapper()
 	if args['pl']: scrapper.set_level(args['pl'])
-	if args['tg']
+	if args['tg']: pass
+	if args['se']: scrapper.set_engine(args['se'])
 	scrapper.generate_requests(keywords)
 
 	while True:
