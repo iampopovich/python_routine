@@ -71,26 +71,26 @@ class Scrapper:
 def init_argparser():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-kwf', 
-						metavar = 'KEYWORDS_FILE', 
-						action = 'store_true', 
-						help = 'укажи имя или часть имени процесса')
+		metavar = 'KEYWORDS_FILE', 
+		action = 'store_true', 
+		help = 'укажи имя или часть имени процесса')
 	parser.add_argument('-kw', 
-						help = '', 
-						type = str)
+		help = '', 
+		type = str)
 	parser.add_argument('-se',
-						help = 'choose search engine', 
-						type = str, 
-						choices = ['google','yandex','duckduck'])
+		help = 'choose search engine', 
+		type = str, 
+		choices = ['google','yandex','duckduck'])
 	parser.add_argument('-pl', 
-						metavar = 'PERMUTATION_LEVEL',
-						type = int,  
-						help = 'how many permutations you want to check', 
-						action = 'store_true')
+		metavar = 'PERMUTATION_LEVEL',
+		type = int,  
+		help = 'how many permutations you want to check', 
+		action = 'store_true')
 	parser.add_argument('-tg',
-						metavar = 'TARGET_MASK',
-						type = str,
-						help = 'type mask of target source you want to find',
-						required = True)
+		metavar = 'TARGET_MASK',
+		type = str,
+		help = 'type mask of target source you want to find',
+		required = True)
 	return parser
 
 def main():
