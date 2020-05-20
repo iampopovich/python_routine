@@ -23,7 +23,11 @@ class Parser:
 			if all([self.host,self.user,self.secret]):
 				client = paramiko.SSHClient()
 				client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-				client.connect(hostname=self.host, username=self.user, password=self.secret)
+				client.connect(
+					hostname=self.host,
+					username=self.user,
+					password=self.secret
+					)
 				self.conn = client
 			else:
 				print('Fill all credentials before...')
