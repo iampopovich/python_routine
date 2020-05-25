@@ -1,4 +1,4 @@
-from iterrools import permutation
+from itertools import permutation
 from bs4 import *
 import argparse
 import requests
@@ -10,8 +10,12 @@ import re
 import time
 import threading
 import user_agent
-#kw - keywords in arguments
-#fkw - keywords file
+
+ENGINES = {
+	'google': 'https://www.google.com/search?q='
+	'yandex': 'https://yandex.ru/search/?text='
+	'duckduck': 'https://duckduckgo.com/?q='
+	}
 
 class Scrapper:
 
@@ -39,45 +43,42 @@ class Scrapper:
 		return headers_Get
 
 	def set_url_target(self,url):
-		# target = re.search(r"baehr.ru|baehrrussia|behrru|podologclub|nautilus2000|uchebnyj_tsentr_nautilus|pedicurenautilus|pedicure_nautilus|www.krasota.spb.ru",resp)
+		# target = re.search(r'baehr.ru|baehrrussia|behrru|podologclub|nautilus2000|uchebnyj_tsentr_nautilus|pedicurenautilus|pedicure_nautilus|www.krasota.spb.ru',resp)
 		self.url_target = url
 
 	def set_level(self,level):
 		self.level = level
 
 	def set_engine(self, engine):
-		if engine == 'google': self.engine = 'https://www.google.com/search?q='
-		if engine == 'yandex': self.engine = 'https://yandex.ru/search/?text='
-		if engine == 'duckduck': self.engine = 'https://duckduckgo.com/?q='
+		self.engine = ENGINES[engine]
 
-	def scrap_queries(self, queries):
+	def scrap_responses(self, queries):
 		s = requests.Session()
-		for i,q in enumerate(queries):
+		for q in queries:
 			query = '+'.join(q)
-			results = []
-			response = requests.get(self.engine + query, headers = self.get_headers())
-			soup = BeautifulSoup(r.text, "html.parser")
-			# output = []
-			# for searchWrapper in soup.find_all('h3', {'class':'r'}): #this line may change in future based on google's web page structure
-			# 	url = searchWrapper.find('a')["href"] 
-			# 	text = searchWrapper.find('a').text.strip()
-			# 	result = {'text': text, 'url': url}
-			# 	output.append(result)
-
-
-			for position,resp in enumerate(response):
-				if target is None: continue
-				else:
-					result = "{0};{1};{2};{3}" %(engine,query.strip("\n"), position, resp)
-					results.append(result)
+			results = {}
+			r = requests.get(self.engine + query, headers = self.get_headers())
+			soup = BeautifulSoup(r.text, 'html.parser')
+			topics = soup.findAll('div',{'class':'g'})
+			for index, t in enumerate(topics):
+				topic_title = t.find('h3').getText()
+				#if regexp is exist
+				topic_url = t.find('div',{'class':'rc'}).find('a')['href']
+				topic_index = index
+				results[topic_url] = {
+									'query': query,
+									'title': topic_title,
+									'engine': engine,
+									'position': topic_index
+									}
 			with open(self.path_file_out,'a') as output:
-				output.write("%s\n"%("\n".join(results)))
+				json.dump(results, output)
 			time.sleep(30)
 
 	def set_keywords(self, keywords):
 		result = []
-		for _ in range(n):
-			result.extends(itertools.permutations(keywords,self.level)) 
+		for _ in range(self.level):
+			result.extends(permutations(keywords,_)) 
 		self.keywords = result
 
 	def set_keywords_from_file(self, file):
@@ -85,12 +86,9 @@ class Scrapper:
 		with open(file, 'r') as f:
 			json_load = json.load(f)
 			keywords = json_load['keywords']
-		for _ in range(n):
-			result.extends(itertools.permutations(keywords,self.level)) 
+		for _ in range(self.level):
+			result.extends(permutations(keywords,_)) 
 		self.keywords = result
-
-	def get_config():
-		return None #parsed json
 
 def init_argparser():
 	parser = argparse.ArgumentParser()
@@ -132,14 +130,14 @@ def main():
 			qu = queries[glob_index_google:]
 			tr1 = threading.Thread(target = scrapper, args = (qu))
 			tr1.start()
-			print("new thread start at {}...".format(time.time()))
+			print('new thread start at {}...'.format(time.time()))
 			tr1.join()
-			print("thread killed at {}...".format(time.time()))
+			print('thread killed at {}...'.format(time.time()))
 			time.sleep(15)
 		except Exception as ex:
 			continue
-	print("done scrapping at {}...".format(time.time()))
+	print('done scrapping at {}...'.format(time.time()))
 	pass
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 	main()
