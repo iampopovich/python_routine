@@ -1,4 +1,4 @@
-from itertools import permutation
+from itertools import permutations
 from bs4 import *
 import argparse
 import requests
@@ -12,9 +12,9 @@ import threading
 import user_agent
 
 ENGINES = {
-	'google': 'https://www.google.com/search?q='
-	'yandex': 'https://yandex.ru/search/?text='
-	'duckduck': 'https://duckduckgo.com/?q='
+	'google': 'https://www.google.com/search?q=',
+	'yandex': 'https://yandex.ru/search/?text=',
+	'duckduck': 'https://duckduckgo.com/?q=',
 	}
 
 class Scrapper:
@@ -24,8 +24,7 @@ class Scrapper:
 		self.search_engine = None
 		self.user_agent = user_agent.generate_user_agent()
 		self.url_target = None
-		self.keywords = None
-		self.level = 2
+		self.level = None
 
 	def set_user_agent(self):
 		self.user_agent = user_agent.generate_user_agent()
@@ -75,60 +74,62 @@ class Scrapper:
 				json.dump(results, output)
 			time.sleep(30)
 
-	def set_keywords(self, keywords):
+	def get_queries(self, keywords):
 		result = []
 		for _ in range(self.level):
-			result.extends(permutations(keywords,_)) 
-		self.keywords = result
+			result.extend(permutations(keywords,_)) 
+		return result
 
-	def set_keywords_from_file(self, file):
+	def get_queries_from_file(self, file):
 		result = []
 		with open(file, 'r') as f:
 			json_load = json.load(f)
 			keywords = json_load['keywords']
 		for _ in range(self.level):
-			result.extends(permutations(keywords,_)) 
-		self.keywords = result
+			result.extend(permutations(keywords,_)) 
+		return result
 
 def init_argparser():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-kwf', 
-		metavar = 'KEYWORDS_FILE', 
 		action = 'store_true', 
-		help = 'укажи имя или часть имени процесса')
-	parser.add_argument('-kw', 
+		help = 'укажи имя или часть имени процесса'
+		)
+	parser.add_argument('-kw',
+		nargs = '+',
 		help = '', 
-		type = str)
+		type = str
+		)
 	parser.add_argument('-se',
 		help = 'choose search engine', 
 		type = str, 
-		choices = ['google','yandex','duckduck'])
+		choices = ['google','yandex','duckduck']
+		)
 	parser.add_argument('-pl', 
 		metavar = 'PERMUTATION_LEVEL',
 		type = int,  
-		help = 'how many permutations you want to check', 
-		action = 'store_true')
+		help = 'how many permutations you want to check'
+		)
 	parser.add_argument('-tg',
 		metavar = 'TARGET_MASK',
 		type = str,
 		help = 'type mask of target source you want to find',
-		required = True)
+		required = True
+		)
 	return parser
 
 def main():
 	parser = init_argparser()
-	args = parser.parse_arguments()
-	scrapper = Scrapper()
-	if args['pl']: scrapper.set_level(args['pl'])
-	if args['tg']: pass
-	if args['se']: scrapper.set_engine(args['se'])
-	scrapper.generate_requests(keywords)
-
+	args = {"pl":5,"tg":"https://2ch.hk/","se":"google","kw":"pepe meme frog hehe 2ch"}
+	# args = parser.parse_arguments()
+	scrap = Scrapper()
+	if args['pl']: scrap.set_level(args['pl'])
+	if args['tg']: scrap.set_url_target(args['tg'])
+	if args['se']: scrap.set_engine(args['se'])
+	qu = scrap.get_queries(args["kw"])
 	while True:
 		try:
-			if glob_index_google == len(queries): break
-			qu = queries[glob_index_google:]
-			tr1 = threading.Thread(target = scrapper, args = (qu))
+			tr1 = threading.Thread(target = scrap.scrap_responses, args = (qu))
 			tr1.start()
 			print('new thread start at {}...'.format(time.time()))
 			tr1.join()
