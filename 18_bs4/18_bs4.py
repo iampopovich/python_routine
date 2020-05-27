@@ -8,6 +8,7 @@ import os
 import sys
 import re
 import time
+from datetime import datetime as dt
 import threading
 import user_agent
 
@@ -48,10 +49,14 @@ class Scrapper:
 	def set_level(self,level):
 		self.level = level
 
+	def set_file_output(self, file = 'scrap_output'):
+		self.path_file_out = file
+	
 	def set_engine(self, engine):
 		self.engine = ENGINES[engine]
 
 	def scrap_responses(self, queries):
+		if not self.path_file_out: self.set_file_output()
 		s = requests.Session()
 		for q in queries:
 			query = '+'.join(q)
@@ -60,14 +65,22 @@ class Scrapper:
 			soup = BeautifulSoup(r.text, 'html.parser')
 			topics = soup.findAll('div',{'class':'g'})
 			for index, t in enumerate(topics):
-				topic_title = t.find('h3').getText()
+				topic_title = t.find(
+								'div',{'class':'rc'}
+								).find(
+								'div',{'class':'r'}
+								).find('a').find('h3').getText()
 				#if regexp is exist
-				topic_url = t.find('div',{'class':'rc'}).find('a')['href']
+				topic_url = t.find(
+								'div',{'class':'rc'}
+								).find(
+								'div',{'class':'r'}
+								).find('a')['href']
 				topic_index = index
 				results[topic_url] = {
 									'query': query,
 									'title': topic_title,
-									'engine': engine,
+									'engine': self.search_engine,
 									'position': topic_index
 									}
 			with open(self.path_file_out,'a') as output:
@@ -116,6 +129,11 @@ def init_argparser():
 		help = 'type mask of target source you want to find',
 		required = True
 		)
+	parser.add_argument('-fout',
+		type = str,
+		help = 'set path to result output file ',
+		required = False
+		)
 	return parser
 
 def main():
@@ -129,15 +147,15 @@ def main():
 	qu = scrap.get_queries(args["kw"])
 	while True:
 		try:
-			tr1 = threading.Thread(target = scrap.scrap_responses, args = (qu))
+			tr1 = threading.Thread(target = scrap.scrap_responses, args = (qu,))
 			tr1.start()
-			print('new thread start at {}...'.format(time.time()))
+			print('new thread start at {}...'.format(dt.now().isoformat()))
 			tr1.join()
-			print('thread killed at {}...'.format(time.time()))
+			print('thread killed at {}...'.format(dt.now().isoformat()))
 			time.sleep(15)
 		except Exception as ex:
 			continue
-	print('done scrapping at {}...'.format(time.time()))
+	print('done scrapping at {}...'.format(dt.isoformat()))
 	pass
 
 if __name__ == '__main__':
