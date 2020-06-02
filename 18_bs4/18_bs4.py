@@ -59,30 +59,32 @@ class Scrapper:
 		if not self.path_file_out: self.set_file_output()
 		s = requests.Session()
 		for q in queries:
+			if len(q) == 0: continue
 			query = '+'.join(q)
 			results = {}
 			r = requests.get(self.engine + query, headers = self.get_headers())
 			soup = BeautifulSoup(r.text, 'html.parser')
-			topics = soup.findAll('div',{'class':'g'})
+			topics = soup.findAll('div', class_ = 'g')
 			for index, t in enumerate(topics):
-				topic_title = t.find(
-								'div',{'class':'rc'}
-								).find(
-								'div',{'class':'r'}
-								).find('a').find('h3').getText()
-				#if regexp is exist
-				topic_url = t.find(
-								'div',{'class':'rc'}
-								).find(
-								'div',{'class':'r'}
-								).find('a')['href']
-				topic_index = index
-				results[topic_url] = {
-									'query': query,
-									'title': topic_title,
-									'engine': self.search_engine,
-									'position': topic_index
-									}
+				try:
+					topic_title = t.find(
+						'div', class_ = 'rc').find(
+						'div', class_ = 'r').find(
+						'a').find(
+						'h3').getText()
+					#if regexp is exist
+					topic_url = t.find(
+						'div', class_ = 'rc').find(
+						'div', class_ = 'r').find('a')['href']
+					topic_index = index
+					results[topic_url] = {
+										'query': query,
+										'title': topic_title,
+										'engine': self.search_engine,
+										'position': topic_index
+										}
+				except:
+					continue
 			with open(self.path_file_out,'a') as output:
 				json.dump(results, output)
 			time.sleep(30)
@@ -90,7 +92,7 @@ class Scrapper:
 	def get_queries(self, keywords):
 		result = []
 		for _ in range(self.level):
-			result.extend(permutations(keywords,_)) 
+			result.extend(permutations(keywords.split(),_)) 
 		return result
 
 	def get_queries_from_file(self, file):
