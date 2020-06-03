@@ -4,8 +4,6 @@ import argparse
 import requests
 from urllib.parse import urlparse
 import json
-import os
-import sys
 import re
 import time
 from datetime import datetime as dt
@@ -43,7 +41,6 @@ class Scrapper:
 		return headers_Get
 
 	def set_url_target(self,url):
-		# target = re.search(r'baehr.ru|baehrrussia|behrru|podologclub|nautilus2000|uchebnyj_tsentr_nautilus|pedicurenautilus|pedicure_nautilus|www.krasota.spb.ru',resp)
 		self.url_target = url
 
 	def set_level(self,level):
@@ -87,6 +84,7 @@ class Scrapper:
 					continue
 			with open(self.path_file_out,'a') as output:
 				json.dump(results, output)
+				output.write('\n')
 			time.sleep(30)
 
 	def get_queries(self, keywords):
@@ -140,13 +138,12 @@ def init_argparser():
 
 def main():
 	parser = init_argparser()
-	args = {"pl":5,"tg":"https://2ch.hk/","se":"google","kw":"pepe meme frog hehe 2ch"}
-	# args = parser.parse_arguments()
+	args = parser.parse_arguments()
 	scrap = Scrapper()
 	if args['pl']: scrap.set_level(args['pl'])
 	if args['tg']: scrap.set_url_target(args['tg'])
 	if args['se']: scrap.set_engine(args['se'])
-	qu = scrap.get_queries(args["kw"])
+	qu = scrap.get_queries(args['kw'])
 	while True:
 		try:
 			tr1 = threading.Thread(target = scrap.scrap_responses, args = (qu,))
