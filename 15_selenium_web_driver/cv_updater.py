@@ -5,7 +5,7 @@ import logging
 
 def get_config():
 	logging.info("получаю конфигурацию приложения")
-	with open('cred.cfg', 'r') as c:
+	with open('conf.cfg', 'r') as c:
 		config = json.load(c)
 	logging.info("конфигурация получена")
 	return config
@@ -39,8 +39,8 @@ def autorize(browser, config):
 
 def send_reply(browser, config):
 	try:
-		resume_id = config['resumeID']
-		reply_text = config['replyMessage']
+		resume_id = config['resume_id']
+		reply_text = config['reply_message']
 		replies = config['reply']
 		browser.get('https://spb.hh.ru/search/vacancy?order_by=publication_time&clusters=true&resume={}&enable_snippets=true'.format(resume_id))
 		time.sleep(10)
@@ -97,9 +97,9 @@ def main():
 	while True:
 		try:
 			config = get_config()
-			browser = init_browser(config['browserPath'])
+			browser = init_browser(config['browser_path'])
 			browser = autorize(browser, config)
-			update_cv(browser, config['resumeID'])
+			update_cv(browser, config['resume_id'])
 			if config['reply'] != 0: pass #send_reply(browser, config) #unstable fusnctionality will be tested and deployed in next version 
 			browser.quit()
 			time.sleep(14450) #ласно правилам ХХ можно апдейтить CV  раз в 4 часа
