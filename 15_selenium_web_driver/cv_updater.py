@@ -1,4 +1,5 @@
 from selenium import webdriver
+import os
 import json
 import time
 import logging
@@ -12,6 +13,7 @@ def get_config():
 
 def init_browser(path):
 	logging.info("инициализирую браузер")
+	path = os.path.join(os.getcwd(),path)
 	browser = webdriver.Chrome(executable_path = path)
 	logging.info("браузер инициализирован")
 	return browser
