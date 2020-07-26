@@ -11,7 +11,16 @@ def get_config():
 	logging.info("конфигурация получена")
 	return config
 
-def init_browser(path):
+def get_browser_path():
+	os = {
+		"posix":"chromedriver_mac",
+		"nt":"chromedriver_win.exe"
+		}
+	return os[os.name()]
+
+
+def init_browser():
+	path = get_browser_path()
 	logging.info("инициализирую браузер")
 	path = os.path.join(os.getcwd(),path)
 	browser = webdriver.Chrome(executable_path = path)
@@ -99,7 +108,7 @@ def main():
 	while True:
 		try:
 			config = get_config()
-			browser = init_browser(config['browser_path'])
+			browser = init_browser()
 			browser = autorize(browser, config)
 			update_cv(browser, config['resume_id'])
 			if config['reply'] != 0: pass #send_reply(browser, config) #unstable fusnctionality will be tested and deployed in next version 
