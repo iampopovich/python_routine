@@ -7,7 +7,7 @@ class NXJournal:
 		self.work_part = self.session.Parts.Work
 		self.lw = self.session.ListingWindow
 
-	def check_extended_views(workPart):
+	def check_extended_views(self):
 		try:
 			views_standard = [
 				"Top",
