@@ -1,6 +1,4 @@
-from math import *
 import NXOpen
-import NXOpen.UF
 import re
 
 class NXJournal:
@@ -8,7 +6,6 @@ class NXJournal:
 	def __init__(self):
 		self.session  = NXOpen.Session.GetSession()
 		self.work_part = self.session.Parts.Work
-		self.work_view = self.work_part.Views.WorkView
 		self.lw = self.session.ListingWindow
 
 
