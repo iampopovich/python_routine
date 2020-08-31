@@ -9,7 +9,7 @@ class NXJournal:
         self.lw = self.session.ListingWindow
         self.uf_session = NXOpen.UF.UFSession.GetUFSession()
 
-    def check_distance_to_point(pCoord):
+    def check_distance_to_point(self, pCoord):
         try:
             return sqrt(pow(pCoord.X, 2) + pow(pCoord.Y, 2) + pow(pCoord.Z, 2))
         except Exception as ex:
