@@ -1,66 +1,74 @@
 import NXOpen
 import NXOpen.UF
 import NXOpen.Assemblies
-import math
-import time as tt
-import datetime as dt
+
+
+class NXJournal:
+
+    def __init__(self):
+        self.session = NXOpen.Session.GetSession()
+        self.work_part = self.session.Parts.Work
+        self.work_view = self.work_part.Views.WorkView
+        self.lw = self.session.ListingWindow
+        self.uf_session = NXOpen.UF.UFSession.GetUFSession()
+        self.root_comopnent = self.work_part.ComponentAssembly.RootComponent
+
+    def check_weight_statement(self):
+        if not self.root_component:
+            print("Root component is empty...")
+            return
+        component_objects = []
+        component_objects.append(self.root_component)
+        report_component_children(self.root_component, component_objects)
+        out_list = []
+        for item in component_objects:
+            mass_props = self.uf_session.Weight.AskProps(
+                item.Tag, NXOpen.UF.Weight.UnitsType.UNITS_KMM)
+            if mass_props.CacheState == NXOpen.UF.Weight.StateType.CACHED:
+                out_list.append(
+                    "Состояние массы {}: Расчет актуальный".format(item.Name))
+            elif mass_props.CacheState == NXOpen.UF.Weight.StateType.NO_CACHE:
+                out_list.append(
+                    "Состояние массы {}: Расчет не актуальный".format(item.Name))
+            elif mass_props.CacheState == NXOpen.UF.Weight.StateType.ASSERTED:
+                out_list.append(
+                    "Состояние массы {}: Назначена вручную".format(item.Name))
+            elif mass_props.CacheState == NXOpen.UF.Weight.StateType.IMPLIED:
+                pass
+            elif mass_props.CacheState == NXOpen.UF.Weight.StateType.INHERITED:
+                pass
+            elif mass_props.CacheState == NXOpen.UF.Weight.StateType.UNKNOWN:
+                pass
+        return "\n".join(out_list)
+
+    def report_component_children(component, component_list):
+        try:
+            component_children = component.GetChildren()
+        except:
+            return component_list
+        if component_children:
+            for item in component_children:
+                try:
+                    if item.IsSuppressed:
+                        component_list.append(item)
+                    elif item.GetChildren():
+                        component_list.append(item)
+                        report_component_children(item, component_list)
+                    else:
+                        component_list.append(item)
+                except Exception as ex:
+                    print("report_component_children failed with {}".format(ex))
+                    return
+            return component_list
+        else:
+            return component_list
+
 
 def main():
-	theSession = NXOpen.Session.GetSession()
-	theUF = NXOpen.UF.UFSession.GetUFSession()
-	theUI = NXOpen.UI.GetUI()
-	workPart = theSession.Parts.Work
-	global lw
-	lw = theSession.ListingWindow
-	lw.Open()
-	try:
-		rtComp = workPart.ComponentAssembly.RootComponent
-		if (rtComp != 0): lw.WriteLine('%s' %checkWeightStatement(rtComp,theUF))
-		else: pass
-	except Exception as e:
-		lw.WriteLine('main failed with %s' %e)
+    app = NXJournal()
+    app.lw.Open()
+    app.check_weight_statement()
 
-	
-def checkWeightStatement(component,theUF):
-	try: #для сб достаточно проверить только первый рут компонент
-		cws_string = ''
-		workPart = component.OwningPart
-		cws_componentObjects = []
-		cws_componentObjects.append(component)
-		reportComponentChildren(component,cws_componentObjects)
-		cws_list = []
-		for item in cws_componentObjects:
-			cws_massProps = theUF.Weight.AskProps(item.Tag, NXOpen.UF.Weight.UnitsType.UNITS_KMM)
-			if cws_massProps.CacheState == NXOpen.UF.Weight.StateType.CACHED: 
-				cws_list.append('Состояние массы %s: Расчет массы актуальный' %item.Name)
-			elif cws_massProps.CacheState == NXOpen.UF.Weight.StateType.NO_CACHE:
-				cws_list.append('Состояние массы %s: Расчет массы не актуальный' %item.Name)
-			elif cws_massProps.CacheState == NXOpen.UF.Weight.StateType.ASSERTED:
-				cws_list.append('Состояние массы %s: Масса назначена вручную' %item.Name)
-			elif cws_massProps.CacheState == NXOpen.UF.Weight.StateType.IMPLIED: pass
-			elif cws_massProps.CacheState == NXOpen.UF.Weight.StateType.INHERITED: pass 
-			elif cws_massProps.CacheState == NXOpen.UF.Weight.StateType.UNKNOWN: pass
-		cws_string = '\n'.join(cws_list)
-		return cws_string
-	except Exception as ex:
-		return('checkWeightStatement failed with %s' %ex) 
-	
-	
-def reportComponentChildren(rcc_comp,rcc_compList):
-	try: rcc_componentChildren = rcc_comp.GetChildren()
-	except: return rcc_compList
-	if len(rcc_componentChildren) != 0:
-		for item in rcc_componentChildren:
-			try:
-				if item.IsSuppressed: rcc_compList.append(item)#pass
-				elif len(item.GetChildren()) != 0:
-					rcc_compList.append(item)
-					reportComponentChildren(item,rcc_compList)
-				else: rcc_compList.append(item)
-			except Exception as ex:
-				return ('reportComponentChildren failed with %s ' %ex)#debug output
-		return rcc_compList	
-	else: return rcc_compList
-	
-if __name__ == '__main__':
-	main()
+
+if __name__ == "__main__":
+    main()
