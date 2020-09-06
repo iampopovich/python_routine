@@ -1,17 +1,17 @@
 class toyClass:
-	def __init__(self, name):
-		self.name = None
+    def __init__(self, name):
+        self.name = None
 
-	def instance_method(self):
-		return 'instance method called', self
-	
-	@classmethod
-	def class_method(cls):
-		return 'class method called', cls
+    def instance_method(self):
+        return 'instance method called', self
 
-	@staticmethod
-	def static_method():
-		return 'static method called'
+    @classmethod
+    def class_method(cls):
+        return 'class method called', cls
+
+    @staticmethod
+    def static_method():
+        return 'static method called'
 
 
 toy = toyClass('heher')
