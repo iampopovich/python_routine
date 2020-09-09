@@ -11,19 +11,23 @@ def parse_json_commands(file):
         config = json.load(f)
     return config['buttons']
 
+
 def get_html_template(path):
     with open(path, 'r') as html:
         content = html.read()
     return content
 
-def generate_html(file):
+
+def generate_index_html(file):
     html_template = get_html_template('./index_template.html')
     config = parse_json_commands(file)
     buttons = []
     button_html = '<input type="button" value="{}" onclick="{}">'
     for item in config:
         buttons.append(button_html.format(item['title'], item['action']))
-    return re.sub(r'REPLACE_IT', '\n'.join(buttons), html_template)
+    with open('index.html', 'w') as index:
+        index.write(re.sub(r'REPLACE_IT', '\n'.join(buttons), html_template))
+    print(re.sub(r'REPLACE_IT', '\n'.join(buttons), html_template))
 
 
 def run_server():
@@ -35,7 +39,7 @@ def run_server():
 
 
 def main(args):
-    print(generate_html(args[1]))
+    generate_index_html(args[1])
     run_server()
 
 

@@ -1,1 +1,4 @@
-{"buttons":[{"title":"zalupa","action":"sosat"}]}
+{"buttons":[
+	{"title":"PLAY","action":"play()"},
+	{"title":"PAUSE","action":"pause()"}
+]}
