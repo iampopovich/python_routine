@@ -4,6 +4,35 @@ import json
 import re
 import http.server
 import socketserver
+from io import BytesIO
+
+
+class CustomHandler(http.server.BaseHTTPRequestHandler):
+
+    def _send_cors_headers(self):
+        """ Sets headers required for CORS """
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
+        self.send_header("Access-Control-Allow-Headers",
+                         "x-api-key,Content-Type")
+
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        with open('index.html', 'rb') as index:
+            self.wfile.write(index.read())
+
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        body = self.rfile.read(content_length)
+        self.send_response(200)
+        self._send_cors_headers()
+        self.end_headers()
+        response = BytesIO()
+        response.write(b'This is POST request. ')
+        response.write(b'Received: ')
+        response.write(body)
+        self.wfile.write(response.getvalue())
 
 
 def parse_json_commands(file):
@@ -22,9 +51,9 @@ def generate_index_html(file):
     html_template = get_html_template('./index_template.html')
     config = parse_json_commands(file)
     buttons = []
-    button_html = '<input type="button" value="{}" onclick="{}">'
+    button_html = '<button class="btn btn-secondary btn-lg btn-block" onclick=sendRequest(this) argument={} type="button">{}</button>'
     for item in config:
-        buttons.append(button_html.format(item['title'], item['action']))
+        buttons.append(button_html.format(item['action'], item['title']))
     with open('index.html', 'w') as index:
         index.write(re.sub(r'REPLACE_IT', '\n'.join(buttons), html_template))
     print(re.sub(r'REPLACE_IT', '\n'.join(buttons), html_template))
@@ -32,7 +61,7 @@ def generate_index_html(file):
 
 def run_server():
     PORT = 8080
-    Handler = http.server.SimpleHTTPRequestHandler
+    Handler = CustomHandler
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
         print("serving at port", PORT)
         httpd.serve_forever()

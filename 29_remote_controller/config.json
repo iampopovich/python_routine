@@ -1,4 +1,4 @@
 {"buttons":[
-	{"title":"PLAY","action":"play()"},
+	{"title":"PLAY","action":"cmd echo 100"},
 	{"title":"PAUSE","action":"pause()"}
 ]}
