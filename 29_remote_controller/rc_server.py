@@ -47,29 +47,42 @@ def get_html_template(path):
     return content
 
 
-def generate_index_html(file):
-    html_template = get_html_template('./index_template.html')
-    config = parse_json_commands(file)
-    buttons = []
-    button_html = '<button class="btn btn-secondary btn-lg btn-block" onclick=sendRequest(this) argument={} type="button">{}</button>'
-    for item in config:
-        buttons.append(button_html.format(item['action'], item['title']))
-    with open('index.html', 'w') as index:
-        index.write(re.sub(r'REPLACE_IT', '\n'.join(buttons), html_template))
-    print(re.sub(r'REPLACE_IT', '\n'.join(buttons), html_template))
+def generate_index_html(file=None):
+    if file:
+        html_template = get_html_template('./index_template.html')
+        config = parse_json_commands(file)
+        buttons = []
+        button_html = '<button class="btn btn-secondary btn-lg btn-block" onclick=sendRequest(this) argument={} type="button">{}</button>'
+        for item in config:
+            buttons.append(button_html.format(item['action'], item['title']))
+        with open('index.html', 'w') as index:
+            index.write(
+                re.sub(r'REPLACE_IT', '\n'.join(buttons), html_template))
+        return True
+    else:
+        if not os.path.exists('./index.html'):
+            print('index.html does not exist')
+            return False
+        else:
+            print('index.html is already generated')
+            return True
 
 
-def run_server():
+def run_server(config):
     PORT = 8080
-    Handler = CustomHandler
-    with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print("serving at port", PORT)
-        httpd.serve_forever()
+    if generate_index_html(config):
+        Handler = CustomHandler
+        with socketserver.TCPServer(("", PORT), Handler) as httpd:
+            print("serving at port", PORT)
+            httpd.serve_forever()
 
 
 def main(args):
-    generate_index_html(args[1])
-    run_server()
+    try:
+        config = args[1]
+    except:
+        config = None
+    run_server(config)
 
 
 if __name__ == '__main__':
