@@ -25,13 +25,12 @@ class CustomHandler(http.server.BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
+        os.system(body)
         self.send_response(200)
         self._send_cors_headers()
         self.end_headers()
         response = BytesIO()
-        response.write(b'This is POST request. ')
-        response.write(b'Received: ')
-        response.write(body)
+        response.write(b'{}: executed'.format(body))
         self.wfile.write(response.getvalue())
 
 
@@ -52,7 +51,9 @@ def generate_index_html(file=None):
         html_template = get_html_template('./index_template.html')
         config = parse_json_commands(file)
         buttons = []
-        button_html = '<button class="btn btn-secondary btn-lg btn-block" onclick=sendRequest(this) argument={} type="button">{}</button>'
+        button_html = '<button class="btn btn-secondary \
+            btn-lg btn-block" onclick=sendRequest(this) \
+            argument={} type="button">{}</button>'
         for item in config:
             buttons.append(button_html.format(item['action'], item['title']))
         with open('index.html', 'w') as index:
