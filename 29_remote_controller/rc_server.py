@@ -35,7 +35,7 @@ class CustomHandler(http.server.BaseHTTPRequestHandler):
 
 
 def parse_json_commands(file):
-    with open(file, 'r') as f:
+    with open(file, 'rb') as f:
         config = json.load(f)
     return config['buttons']
 
