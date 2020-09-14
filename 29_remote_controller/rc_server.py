@@ -53,7 +53,7 @@ def generate_index_html(file=None):
         buttons = []
         button_html = '<button class="btn btn-secondary \
             btn-lg btn-block" onclick=sendRequest(this) \
-            argument={} type="button">{}</button>'
+            argument="{}" type="button">{}</button>'
         for item in config:
             buttons.append(button_html.format(item['action'], item['title']))
         with open('index.html', 'w') as index:
