@@ -48,15 +48,15 @@ class NXJournal:
         layers_selectable = []
         layers_visible = []
         out_string = ""
-        for layer_num in range(1, 256):
-            if layer_manager.GetState(layer_num) == NXOpen.Layer.State.Hidden:
-                layers_hidden.append(layer_num)
-            elif layer_manager.GetState(layer_num) == NXOpen.Layer.State.Visible:
-                layers_visible.append(layer_num)
-            elif layer_manager.GetState(layer_num) == NXOpen.Layer.State.Selectable:
-                layers_selectable.append(layer_num)
-            elif layer_manager.GetState(layer_num) == NXOpen.Layer.State.WorkLayer:
-                layers_work.append(layer_num)
+        for layer in range(1, 256):
+            if layer_manager.GetState(layer) == NXOpen.Layer.State.Hidden:
+                layers_hidden.append(layer)
+            elif layer_manager.GetState(layer) == NXOpen.Layer.State.Visible:
+                layers_visible.append(layer)
+            elif layer_manager.GetState(layer) == NXOpen.Layer.State.Selectable:
+                layers_selectable.append(layer)
+            elif layer_manager.GetState(layer) == NXOpen.Layer.State.WorkLayer:
+                layers_work.append(layer)
         out_string += "layers_hidden {}\n".format(
             self.convert_output(layers_hidden))
         out_string += "layers_selectable {}\n".format(

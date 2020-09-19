@@ -22,6 +22,9 @@ from check_extended_views import NXJournal as checker_extended_views
 from check_suppressed_objects import NXJournal as checker_suppressed_objects
 from report_component_children import report_component_children
 from check_weight import NXJournal as checker_weight_statement
+from check_mass_reference_set import NXJournal as checker_mass_refference_set
+from check_model_accuracy import NXJournal as checker_model_accuracy
+from check_layers_statement import NXJournal as checker_layer_statement
 
 
 class AKS_checker_application:
@@ -269,46 +272,6 @@ class AKS_checker_application:
         except Exception as ex:
             return ("checkItemType failed with: %s" % ex)
 
-    def checkWeightStatement(self):
-        if self.rtComp in [0, None]:
-            componentObjects = [self.workPart]
-        else:
-            componentObjects = self.reportComponentChildren(
-                self.rtComp, [self.rtComp])
-        try:
-            outList = []
-            for item in componentObjects:
-                cws_massProps = self.theUF.Weight.AskProps(
-                    item.Tag, NXOpen.UF.Weight.UnitsType.UNITS_KMM)
-                if cws_massProps.CacheState == NXOpen.UF.Weight.StateType.CACHED:
-                    pass  # return True
-                elif cws_massProps.CacheState == NXOpen.UF.Weight.StateType.NO_CACHE:
-                    try:
-                        outList.append(
-                            "Проверка состояния массы: Состояние массы %s: Расчет массы не актуальный" % item.DisplayName)
-                    except:
-                        outList.append(
-                            "Проверка состояния массы: Состояние массы %s: Расчет массы не актуальный" % item.Name)
-                elif cws_massProps.CacheState == NXOpen.UF.Weight.StateType.ASSERTED:
-                    try:
-                        outList.append(
-                            "Проверка состояния массы: Состояние массы %s: Масса назначена вручную" % item.DisplayName)
-                    except:
-                        outList.append(
-                            "Проверка состояния массы: Состояние массы %s: Масса назначена вручную" % item.Name)
-                elif cws_massProps.CacheState == NXOpen.UF.Weight.StateType.IMPLIED:
-                    pass
-                elif cws_massProps.CacheState == NXOpen.UF.Weight.StateType.INHERITED:
-                    pass
-                elif cws_massProps.CacheState == NXOpen.UF.Weight.StateType.UNKNOWN:
-                    pass
-            if len(outList) == 0:
-                return True
-            else:
-                return "\n".join(outList)
-        except Exception as ex:
-            return ("checkWeightStatement failed with {0}".format(ex))
-
     def checkDirectModelCreationMode(self):
         try:
             if self.theSession.Parts.SaveOptions.VisualizationData:
@@ -398,44 +361,6 @@ class AKS_checker_application:
         except Exception as ex:
             return ("checkMassAccuracy failed with {0}".format(ex))
 
-    def checkMassRefset(self):
-        try:
-            massRefSet = self.configuration["massReferenceSet"]
-            modelMassRefSet = self.theUF.Weight.AskPartRefSet(
-                self.workPart.Tag)
-            if modelMassRefSet == massRefSet:
-                return True
-            else:
-                return "Проверка ссылочного набора расчета массы: СН не соответствует требованиям"
-        except Exception as ex:
-            return ("checkMassRefset failed with {0}".format(ex))
-
-    def checkModelAccuracy(self):
-        try:
-            conclusion = []
-            distanceTollerance = self.configuration["distanceTollerance"]
-            angleTollerance = self.configuration["angleTollerance"]
-            modelDistanceTollerance = self.workPart.Preferences.Modeling.DistanceToleranceData
-            modelAngleTollerance = self.workPart.Preferences.Modeling.AngleToleranceData
-            statementAngle = distanceTollerance == modelDistanceTollerance
-            statementDistance = angleTollerance == modelAngleTollerance
-            if statementAngle:
-                pass
-            else:
-                conclusion.append(
-                    "Проверка точности моделирования: угловой допуск не соответствует требованиям")
-            if statementDistance:
-                pass
-            else:
-                conclusion.append(
-                    "Проверка точности моделирования: линейный допуск не соответствует требованиям")
-            if len(conclusion) == 0:
-                return True
-            else:
-                return "\n".join(conclusion)
-        except Exception as ex:
-            return ("checkModelAccuracy failed with {0}".format(ex))
-
     def _cycleObjects(self, _type, _subtype=None):
         objects = []
         tmpBodyTag = 0
@@ -489,55 +414,6 @@ class AKS_checker_application:
         except Exception as ex:
             return ("_cls_unifiedOutput failed with {0}".format(ex))
 
-    def checkLayerStatement(self):
-        try:
-            conclusion = []
-            layerManager = self.workPart.Layers
-            selectableLayers = self.configuration["layerCollectionSelectable"]
-            visibleLayers = self.configuration["layerCollectionVisible"]
-            workLayers = self.configuration["layerCollectionWork"]
-            modelLayersHidden = []
-            modelLayersWork = []
-            modelLayersSelectable = []
-            modelLayersVisible = []
-            for modelLayerNum in range(1, 257):
-                layerState = layerManager.GetState(modelLayerNum)
-                if layerState == NXOpen.Layer.State.Hidden:
-                    modelLayersHidden.append(modelLayerNum)
-                elif layerState == NXOpen.Layer.State.Visible:
-                    modelLayersVisible.append(modelLayerNum)  # ВОТ ТУТ ТРАБЛ
-                elif layerState == NXOpen.Layer.State.Selectable:
-                    modelLayersSelectable.append(modelLayerNum)
-                elif layerState == NXOpen.Layer.State.WorkLayer:
-                    modelLayersWork.append(modelLayerNum)
-            nonHidenLayersUnion = workLayers + selectableLayers
-            if sorted(modelLayersWork) == sorted(workLayers):
-                pass
-            else:
-                conclusion.append(
-                    "Проверка набора слоев: неверный рабочий слой")
-            if sorted(modelLayersVisible) == sorted([visibleLayers]):
-                pass
-            else:
-                conclusion.append(
-                    "Проверка набора слоев: неверный набор видимых слоев")
-            if sorted(modelLayersSelectable) == sorted(selectableLayers):
-                pass
-            else:
-                conclusion.append(
-                    "Проверка набора слоев: неверный набор выбираемых слоев")
-            if sorted(modelLayersHidden) == sorted(list(filter(
-                lambda x: x not in nonHidenLayersUnion, [i for i in range(1, 257)]))): pass
-            else:
-                conclusion.append(
-                    "Проверка набора слоев: неверный набор скрытых слоев")
-            if len(conclusion) == 0:
-                return True
-            else:
-                return "\n".join(conclusion)
-        except Exception as ex:
-            return ("checkLayerStatement failed with {0}".format(ex))
-
     def checkReferenceSetDifferences(self):
         try:
             referenceSetCollection = self.workPart.GetAllReferenceSets()
@@ -578,7 +454,6 @@ class AKS_checker_application:
         try:
             _placementMap = {"SOLIDS": [], "UGROUTE_MECH": [],
                              "UGROTE_ELECT": [], "PKI": []}
-            #	most complex task for all check procedure
             if self.rtComp in [0, None]:
                 components = [self.workPart]
                 conclusion = ["%s -- %s" %
@@ -588,7 +463,6 @@ class AKS_checker_application:
                     self.rtComp, [self.rtComp])
                 conclusion = [
                     "%s -- %s" % (item.DisplayName, item.ReferenceSet) for item in components]
-            # return TRUE OR FALSE of statement
             return "\n".join(conclusion)
         except Exception as ex:
             return("checkComponentsRefSetAllocation failed with %s" % ex)
