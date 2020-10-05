@@ -1,17 +1,52 @@
-# d = dictionary
+import json #для записи в файл 
 
-person1 = {'name' : {'last_name' : "Пушкин", 'first_name' : "Александр", 'middle_name' : "Сергеевич"}, 'DOB': 26/05/1799, 'phone' : 8-967-345-23-41}}
-person2 = {'name' : {'last_name' : "Маяковский", 'first_name' : "Владимир", 'middle_name' : "Владимирович"}, 'DOB': 19/07/1893, 'phone' : 8-911-321-35-90}}
-person3 = {'name' : {'last_name' : "Ахматова", 'first_name' : "Анна", 'middle_name' : "Андреевна}, 'DOB': 23/06/1889, 'phone' : 8-981-943-84-82}}
-person4 = {'name' : {'last_name' : "Бродский", 'first_name' : "Иосиф", 'middle_name' : "Александрович"}, 'DOB': 24/05/1940, 'phone' : 8-923-745-23-45}}
-person5 = {'name' : {'last_name' : "Цветаева", 'first_name' : "Марина", 'middle_name' : "Ивановна"}, 'DOB': 08/10/1892, 'phone' : 8-956-672-84-89}}
+persons = []
 
+def add_person():
+    name = input("Type name: ")
+    surname = input("Type surname: ")
+    middle_name = input("Type middle name: ")
+    fullname = name + ' ' + middle_name + ' ' + surname
+    birth_date = input("Type birthdate: ")
+    phone_number = input("Type contact phone number: ")
+    person = {'name':fullname, 'DOB':birth_date, 'phone':phone_number}
+    global persons
+    persons.append(person)
 
-a = input("Что делаем? ")
+def list_all_persons():
+    #сделай сама
+    pass
 
-d = int(input("0 - добавить контакт"
-              "1 - просмотр контактов"
-              "2 - поиск по имени"
-              "3 - поиск по номеру"
-              "4 - удалить контакт"))
-if d ==1
+def search_by_name():
+    #сделай сама
+    pass
+
+def search_by_number():
+    #сделай сама
+    pass
+
+def remove_person():
+    #сделай сама
+    pass
+
+def main():
+    print("Address book v1.0")
+    d = int(input("Type command"
+        "0 - добавить контакт"
+        "1 - просмотр контактов"
+        "2 - поиск по имени"
+        "3 - поиск по номеру"
+        "4 - удалить контакт"))
+    if d == 0:
+        add_person()
+    if d == 1:
+        list_all_persons()
+    if d == 2:
+        search_by_name()
+    if d == 3:
+        search_by_number()
+    if d == 4:
+        remove_person()
+
+if __name__ == '__main__':
+    main()
