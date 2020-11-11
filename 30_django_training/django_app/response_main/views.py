@@ -12,3 +12,11 @@ def about(req):
 
 def help(req):
     return HttpResponse("<h2>Помощь</h2>")
+
+
+def contact(req):
+    return HttpResponse("<h2>Контакты</h2>")
+
+
+def regular_middleware(req):
+    return HttpResponse("<h2>you got regexp processed path</h2>")
