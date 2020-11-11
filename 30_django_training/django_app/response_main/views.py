@@ -20,3 +20,6 @@ def contact(req):
 
 def regular_middleware(req):
     return HttpResponse("<h2>you got regexp processed path</h2>")
+
+def gadgets(req):
+    return HttpResponse("<h2>here will be gadget list</h2>")
