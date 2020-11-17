@@ -21,5 +21,16 @@ def contact(req):
 def regular_middleware(req):
     return HttpResponse("<h2>you got regexp processed path</h2>")
 
+
 def gadgets(req):
     return HttpResponse("<h2>here will be gadget list</h2>")
+
+
+def products(req, product_id):
+    out = "<h2>Product № {0}</h2>".format(product_id)
+    return HttpResponse(out)
+
+
+def users(req, user_id, user_name):
+    out = "<h2>User</h2><h3>id: {0}  name: {1}</h3>".format(user_id, user_name)
+    return HttpResponse(out)
