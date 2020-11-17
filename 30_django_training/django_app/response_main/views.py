@@ -26,7 +26,7 @@ def gadgets(req):
     return HttpResponse("<h2>here will be gadget list</h2>")
 
 
-def products(req, product_id):
+def products(req, product_id=20):
     out = "<h2>Product № {0}</h2>".format(product_id)
     return HttpResponse(out)
 

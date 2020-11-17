@@ -20,6 +20,7 @@ from response_main import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='home'),
+    re_path(r'^products/$', views.products),
     re_path(r'path', views.regular_middleware, name='reg_url'),
     re_path(r'^products/phones|tablets/', views.gadgets, name='gadgets'),
     re_path(r'^products/(?P<product_id>\d+)/', views.products),
