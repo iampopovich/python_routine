@@ -25,4 +25,5 @@ urlpatterns = [
     re_path(r'^products/phones|tablets/', views.gadgets, name='gadgets'),
     path('products/<int:product_id>/', views.products),
     re_path(r'^users/(?P<user_id>\d+)/(?P<user_name>\D+)/', views.users),
+    path('users/', views.users)
 ]

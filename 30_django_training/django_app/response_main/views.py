@@ -31,6 +31,6 @@ def products(req, product_id=20):
     return HttpResponse(out)
 
 
-def users(req, user_id, user_name):
+def users(req, user_id=1, user_name="Roberta"):
     out = "<h2>User</h2><h3>id: {0}  name: {1}</h3>".format(user_id, user_name)
     return HttpResponse(out)
