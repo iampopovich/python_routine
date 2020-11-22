@@ -24,5 +24,5 @@ urlpatterns = [
     re_path(r'path', views.regular_middleware, name='reg_url'),
     re_path(r'^products/phones|tablets/', views.gadgets, name='gadgets'),
     re_path(r'^products/(?P<product_id>\d+)/', views.products),
-    re_path(r'^users/(?P<id>\d+)/(?P<user_name>\D+)/', views.users),
+    re_path(r'^users/(?P<user_id>\d+)/(?P<user_name>\D+)/', views.users),
 ]
