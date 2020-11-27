@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.template.response import TemplateResponse
 from django.http import (
     HttpResponse,
     HttpResponseRedirect,
@@ -7,7 +8,7 @@ from django.http import (
 
 
 def index(req):
-    return render(req, "index.html")
+    return TemplateResponse(req, "response_main/main_responser.html")
 
 
 def about(req):
