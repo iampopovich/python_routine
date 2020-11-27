@@ -7,7 +7,9 @@ from django.http import (
 
 
 def index(req):
-    return HttpResponse("Index")
+    with open('resources/index.html', 'r') as page:
+        index = page.readlines()
+    return HttpResponse(index)
 
 
 def about(req):
