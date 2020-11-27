@@ -1,13 +1,17 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import (
+    HttpResponse,
+    HttpResponseRedirect,
+    HttpResponsePermanentRedirect
+)
 
 
 def index(req):
-    return HttpResponse("<h2>Главная</h2>")
+    return HttpResponse("Index")
 
 
 def about(req):
-    return HttpResponse("<h2>Инфо</h2>")
+    return HttpResponse("About")
 
 
 def help(req):
@@ -15,7 +19,11 @@ def help(req):
 
 
 def contact(req):
-    return HttpResponse("<h2>Контакты</h2>")
+    return HttpResponseRedirect("/about")
+
+
+def details(request):
+    return HttpResponsePermanentRedirect("/")
 
 
 def regular_middleware(req):
@@ -37,4 +45,3 @@ def users(req):
     user_name = req.GET.get("user_name", "Robert")
     out = "<h2>User</h2><h3>id: {0}  name: {1}</h3>".format(user_id, user_name)
     return HttpResponse(out)
-
