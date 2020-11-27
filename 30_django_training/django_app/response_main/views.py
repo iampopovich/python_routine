@@ -27,10 +27,14 @@ def gadgets(req):
 
 
 def products(req, product_id=20):
-    out = "<h2>Product № {0}</h2>".format(product_id)
+    category = req.GET.get("cat", "")
+    out = "<h2>Product № {0} of category {1}</h2>".format(product_id, category)
     return HttpResponse(out)
 
 
-def users(req, user_id=1, user_name="Roberta"):
+def users(req):
+    user_id = req.GET.get("user_id", 20)
+    user_name = req.GET.get("user_name", "Robert")
     out = "<h2>User</h2><h3>id: {0}  name: {1}</h3>".format(user_id, user_name)
     return HttpResponse(out)
+
