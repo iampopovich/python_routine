@@ -7,9 +7,13 @@ from django.http import (
 )
 
 
-def index(req):
-    data = {"header": "Hello Django", "message": "Welcome to Python"}
-    return render(req, "index.html", context=data)
+def index(request):
+    header = "Personal Data"
+    langs = ["English", "German", "Spanish"]
+    user = {"name": "Tom", "age": 23}
+    addr = ("Абрикосовая", 23, 45)
+    data = {"header": header, "langs": langs, "user": user, "address": addr}
+    return render(request, "index.html", context=data)
 
 
 def about(req):
