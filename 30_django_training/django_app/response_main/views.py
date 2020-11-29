@@ -8,7 +8,8 @@ from django.http import (
 
 
 def index(req):
-    return TemplateResponse(req, "response_main/main_responser.html")
+    data = {"header": "Hello Django", "message": "Welcome to Python"}
+    return render(req, "index.html", context=data)
 
 
 def about(req):
