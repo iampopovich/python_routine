@@ -16,10 +16,11 @@ Including another URLconf
 # from django.contrib import admin
 from django.urls import path, re_path
 from response_main import views
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', views.index),
-    path('about/', views.about),
-    path('contact/', views.contact),
+    path('about/', TemplateView.as_view(template_name="about.html")),
+    path('contact/', TemplateView.as_view(template_name="contact.html")),
     path('details/', views.details),
 ]
