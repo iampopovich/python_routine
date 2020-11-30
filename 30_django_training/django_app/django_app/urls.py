@@ -20,7 +20,8 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', views.index),
-    path('about/', TemplateView.as_view(template_name="about.html")),
+    path('about/', TemplateView.as_view(template_name="about.html",
+                                        extra_context={"header": "О сайте"})),
     path('contact/', TemplateView.as_view(template_name="contact.html")),
     path('details/', views.details),
 ]
