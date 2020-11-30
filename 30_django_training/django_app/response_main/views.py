@@ -16,16 +16,18 @@ def index(req):
     return TemplateResponse(req, "index.html", data)
 
 
-def about(req):
-    return HttpResponse("About")
+# deprecated
+# def about(req):
+#     return HttpResponse("About")
 
 
 def help(req):
     return HttpResponse("<h2>Помощь</h2>")
 
 
-def contact(req):
-    return HttpResponseRedirect("/about")
+# deprecated
+# def contact(req):
+#     return HttpResponseRedirect("/about")
 
 
 def details(request):
