@@ -49,3 +49,8 @@ def conditions(req):
     data = {"num": int(req.GET.get("num", 0))}
     print(data)
     return render(req, "format_conditions.html", context=data)
+
+
+def iterators(req):
+    langs = ["English", "German", "French", "Spanish", "Chinese"]
+    return render(req, "format_iterators.html", context={"langs": langs})
