@@ -26,5 +26,5 @@ urlpatterns = [
     path('contact/', TemplateView.as_view(template_name="contact.html")),
     path('details/', views.details),
     path('dates/', TemplateView.as_view(template_name="format_dates.html")),
-
+    path('cnds/', views.conditions),
 ]
