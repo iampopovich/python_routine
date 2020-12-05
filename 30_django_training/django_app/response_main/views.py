@@ -20,7 +20,7 @@ def help(req):
     return HttpResponse("<h2>Помощь</h2>")
 
 
-def details(request):
+def details(req):
     return HttpResponsePermanentRedirect("/")
 
 
@@ -43,3 +43,9 @@ def users(req):
     user_name = req.GET.get("user_name", "Robert")
     out = "<h2>User</h2><h3>id: {0}  name: {1}</h3>".format(user_id, user_name)
     return HttpResponse(out)
+
+
+def conditions(req):
+    data = {"num": int(req.GET.get("num", 0))}
+    print(data)
+    return render(req, "format_conditions.html", context=data)
