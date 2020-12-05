@@ -22,7 +22,7 @@ urlpatterns = [
     path('', views.index),
     path('about/', TemplateView.as_view(template_name="about.html",
                                         extra_context={"header": "О сайте"})),
-    path('extended/',TemplateView.as_view(template_name="extended.html")),
+    path('extended/', TemplateView.as_view(template_name="extended.html")),
     path('contact/', TemplateView.as_view(template_name="contact.html")),
     path('details/', views.details),
 ]
