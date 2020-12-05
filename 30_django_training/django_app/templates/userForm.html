@@ -5,8 +5,12 @@
     <title>Django Forms</title>
 </head>
 <body>
-<table>
-    {{ form }}
-</table>
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form }}
+    </table>
+    <input type="submit" value="Send" >
+</form>
 </body>
 </html>
