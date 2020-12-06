@@ -12,14 +12,20 @@
     </table>
     <input type="submit" value="Send" >
 </form>
-<input type="checkbox" id="chbx">
-<label for="chbx">lol checkbox</label>
 <br>
-<select id="slct">
+<label for="chbx">lol checkbox</label>
+<input type="checkbox" id="chbx" class="forms.BooleanField">
+<br>
+<label for="slct">lol selection</label>
+<select id="slct" class="forms.NullBooleanField">
     <option value="1" selected="selected">Unknown</option>
     <option value="2">Yes</option>
     <option value="3">No</option>
 </select>
-<label for="slct">lol selection</label>
+<br>
+<label for="intxt">lol input text</label>
+<input type="text" id="intxt" class="forms.CharField">
+<br>
+
 </body>
 </html>
