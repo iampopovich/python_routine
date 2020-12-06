@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .forms import UserForm
 from django.template.response import TemplateResponse
 from django.http import (
     HttpResponse,
@@ -49,3 +50,18 @@ def conditions(req):
     data = {"num": int(req.GET.get("num", 0))}
     print(data)
     return render(req, "format_conditions.html", context=data)
+
+
+def iterators(req):
+    langs = ["English", "German", "French", "Spanish", "Chinese"]
+    return render(req, "format_iterators.html", context={"langs": langs})
+
+
+def user_form(req):
+    if req.method == "POST":
+        name = req.POST.get("name")
+        age = req.POST.get("age")
+        return HttpResponse("<h2>Hello, {0}, heh {1}</h2>".format(name, age))
+    else:
+        userform = UserForm()
+        return render(req, "userForm.html", {"form": userform})
