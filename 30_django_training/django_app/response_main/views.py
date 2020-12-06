@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from response_main.forms import UserForm
+from .forms import UserForm
 from django.template.response import TemplateResponse
 from django.http import (
     HttpResponse,
@@ -58,5 +58,10 @@ def iterators(req):
 
 
 def user_form(req):
-    userform = UserForm()
-    return render(req, "userForm.html", {"form": userform})
+    if req.method == "POST":
+        name = req.POST.get("name")
+        age = req.POST.get("age")
+        return HttpResponse("<h2>Hello, {0}, heh {1}</h2>".format(name, age))
+    else:
+        userform = UserForm()
+        return render(req, "userForm.html", {"form": userform})
