@@ -15,4 +15,5 @@ urlpatterns = [
     path('cnds/', views.conditions),
     path('iters/', views.iterators),
     path('forms/', views.user_form),
+    path('widgets/', views.widget_form),
 ]
