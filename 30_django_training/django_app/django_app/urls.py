@@ -29,5 +29,5 @@ urlpatterns = [
     path('context/', TemplateView.as_view(template_name="format_context.html")),
     path('cnds/', views.conditions),
     path('iters/', views.iterators),
-    path('user_form/', views.user_form),
+    path('forms/', views.user_form),
 ]
