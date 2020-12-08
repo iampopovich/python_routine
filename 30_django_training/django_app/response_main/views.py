@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .forms import UserForm
+from .widgets import FormWithWidget
 from django.template.response import TemplateResponse
 from django.http import (
     HttpResponse,
@@ -65,3 +66,11 @@ def user_form(req):
     else:
         userform = UserForm()
         return render(req, "userForm.html", {"form": userform})
+
+
+def widget_form(req):
+    if req.method == "POST":
+        return HttpResponse("<h2>You've sent a widget form</h2>")
+    else:
+        widgetform = FormWithWidget()
+        return render(req, "formWidgets.html", {"form": widgetform})

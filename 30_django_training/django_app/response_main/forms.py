@@ -27,3 +27,5 @@ class UserForm(forms.Form):
     field_float_value = forms.FloatField()
     field_choice = forms.ChoiceField(
         choices=((0, 'zero'), (1, 'one'), (2, 'two')))
+    # widget_pass = forms.PasswordInput()
+    # widget_hidden_input = forms.HiddenInput()
