@@ -25,4 +25,5 @@ class UserForm(forms.Form):
     field_integer_value = forms.IntegerField()
     field_decimal_value = forms.DecimalField()
     field_float_value = forms.FloatField()
-    field_choice = forms.ChoiceField((0, 'zero'), (1, 'one'), (2, 'two'))
+    field_choice = forms.ChoiceField(
+        choices=((0, 'zero'), (1, 'one'), (2, 'two')))
