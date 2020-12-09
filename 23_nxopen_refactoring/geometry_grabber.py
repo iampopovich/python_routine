@@ -1,14 +1,9 @@
-import math
 import NXOpen
 import NXOpen.UF
-import re
 import os
-import collections
-import itertools
 import threading
 import multiprocessing
 import time as tt
-import sys
 
 
 class GeometryGrabber:
