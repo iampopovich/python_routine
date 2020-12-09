@@ -5,6 +5,8 @@ import threading
 import multiprocessing
 import time as tt
 
+APPDATA = os.environ['APPDATA']
+
 
 class GeometryGrabber:
     def __init__(self):
@@ -13,47 +15,39 @@ class GeometryGrabber:
         self.work_part = self.session.Parts.Work
         self.lw = self.session.ListingWindow
         self.bodies = []
-        self.file_cache = []
+        self.file_cache = ''
 
-    def write_cache_file(self, body, values):
+    def write_file_cache(self, body, values):
         with multiprocessing.Lock():
             with open(self.file_cache, 'a') as cached_geometry:
                 cached_geometry.write('--\n{0}-{1}\n'.format(body, values))
 
-    def get_cache_file(self):
+    def set_file_cache(self, file_name=''):
         try:
-            folder_name = '%s\\teamcenter\\NX_DMCache' % os.environ['APPDATA']
-            file_name = '%s\\teamcenter\\NX_DMCache\\cached_geometry.txt' % os.environ[
-                'APPDATA']
-            if os.path.isdir(folder_name):
-                pass
-            else:
-                os.mkdir(folder_name)
-            if os.path.isfile(file_name):
-                self.file_cache = file_name
-                # return file_name
-            else:
-                with open(file_name, 'a') as cache:
-                    cache.close()
-                self.file_cache = file_name
-                # return file_name
+        	if not file_name:
+            	folder_name = os.path.join(APPDATA, 'teamcenter', 'NX_DMCache')
+            	file_name = os.path.join(folder_name, 'cached_geometry.txt')
+            	if not os.path.isdir(folder_name):
+                	os.mkdir(folder_name)
+            	if not os.path.isfile(file_name):
+                	with open(file_name, 'w') as cache:
+                    	cache.write()
+            self.file_cache = file_name
         except Exception as ex:
-            #self.theUI.NXMessageBox.Show(self.moduleName, self.MSG_Error, 'get_cache_file failed with %s' %ex)
             raise ex
-        pass
+
+    def get_file_cache(self):
+    	return self.file_cache
 
     def grab_geometry(self, bodies, vertices=[], points=[]):
         with multiprocessing.Lock():
             for body in bodies:
-                edges = []
-                [edges.append(edge) for edge in body.GetEdges()]
                 vertices = []
-                for edge in edges:
-                    [vertices.append(vert) for vert in edge.GetVertices()]
                 points = []
+                for edge in body.GetEdges():
+                    [vertices.append(vert) for vert in edge.GetVertices()]
                 for point in vertices:
                     points.append((point.X, point.Y, point.Z))
-                # self.write_cache_file(body,points)
 
     def chunkIt(self, thread_num, out=[], last=0.0):
         avg = len(self.bodies) / float(thread_num)
@@ -82,7 +76,7 @@ def main(thread_num=4):
     app = GeometryGrabber()
     app.lw.Open()
     app.process_objects()
-    app.get_cache_file()
+    app.set_file_cache()
     chunks = app.chunkIt(thread_num)
     # multithreading section
     if len(app.bodies) > 1:
