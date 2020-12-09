@@ -15,40 +15,32 @@ class GeometryGrabber:
     def __init__(self):
         self.session = NXOpen.Session.GetSession()
         self.session_uf = NXOpen.UF.UFSession.GetUFSession()
-        # self.thePDM = self.session.PdmSession
         self.work_part = self.session.Parts.Work
-        # self.displayPart = self.session.Parts.Display
-        # self.root_component = self.work_part.ComponentAssembly.RootComponent
         self.lw = self.session.ListingWindow
-        self.bodies = []  # self.process_objects()
-        self.fileCache = []  # self.get_cache_file()
-        # self.lw.Open()
+        self.bodies = []
+        self.file_cache = []
 
     def write_cache_file(self, body, values):
         with multiprocessing.Lock():
-            with open(self.fileCache, 'a') as cachedGeometry:
-                cachedGeometry.write('-------\n')
-                # try:cachedGeometry.write('%s\n'%body.OwningComponent.Name)
-                # except:cachedGeometry.write('%s\n'%body.OwningPart.Name)
-                cachedGeometry.write('%s-%s\n' % (body, values))
-                cachedGeometry.close()
+            with open(self.file_cache, 'a') as cached_geometry:
+                cached_geometry.write('--\n{0}-{1}\n'.format(body, values))
 
     def get_cache_file(self):
         try:
             folder_name = '%s\\teamcenter\\NX_DMCache' % os.environ['APPDATA']
-            file_name = '%s\\teamcenter\\NX_DMCache\\cachedGeometry.txt' % os.environ[
+            file_name = '%s\\teamcenter\\NX_DMCache\\cached_geometry.txt' % os.environ[
                 'APPDATA']
             if os.path.isdir(folder_name):
                 pass
             else:
                 os.mkdir(folder_name)
             if os.path.isfile(file_name):
-                self.fileCache = file_name
+                self.file_cache = file_name
                 # return file_name
             else:
                 with open(file_name, 'a') as cache:
                     cache.close()
-                self.fileCache = file_name
+                self.file_cache = file_name
                 # return file_name
         except Exception as ex:
             #self.theUI.NXMessageBox.Show(self.moduleName, self.MSG_Error, 'get_cache_file failed with %s' %ex)
