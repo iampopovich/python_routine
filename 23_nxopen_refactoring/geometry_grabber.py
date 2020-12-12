@@ -5,6 +5,7 @@ import threading
 import multiprocessing
 import time as tt
 
+
 APPDATA = os.environ['APPDATA']
 
 
@@ -24,20 +25,20 @@ class GeometryGrabber:
 
     def set_file_cache(self, file_name=''):
         try:
-        	if not file_name:
-            	folder_name = os.path.join(APPDATA, 'teamcenter', 'NX_DMCache')
-            	file_name = os.path.join(folder_name, 'cached_geometry.txt')
-            	if not os.path.isdir(folder_name):
-                	os.mkdir(folder_name)
-            	if not os.path.isfile(file_name):
-                	with open(file_name, 'w') as cache:
-                    	cache.write()
+            if not file_name:
+                folder_name = os.path.join(APPDATA, 'teamcenter', 'NX_DMCache')
+                file_name = os.path.join(folder_name, 'cached_geometry.txt')
+                if not os.path.isdir(folder_name):
+                    os.mkdir(folder_name)
+                if not os.path.isfile(file_name):
+                    with open(file_name, 'w') as cache:
+                        cache.write()
             self.file_cache = file_name
         except Exception as ex:
             raise ex
 
     def get_file_cache(self):
-    	return self.file_cache
+        return self.file_cache
 
     def grab_geometry(self, bodies, vertices=[], points=[]):
         with multiprocessing.Lock():
@@ -49,27 +50,59 @@ class GeometryGrabber:
                 for point in vertices:
                     points.append((point.X, point.Y, point.Z))
 
-    def chunkIt(self, thread_num, out=[], last=0.0):
-        avg = len(self.bodies) / float(thread_num)
+    def get_object_chunks(self, thread_num, out=[], last=0.0):
+        obj_in_chunk = len(self.bodies) / float(thread_num)
         while last < len(self.bodies):
-            out.append(self.bodies[int(last):int(last + avg)])
-            last += avg
+            out.append(self.bodies[int(last):int(last + obj_in_chunk)])
+            last += obj_in_chunk
         return out
 
-    def process_objects(self, bodies=[], tmpBodyTag=0):
+    def process_objects(self, bodies=[], temp_body_tag=0):
         while True:
-            tmpBodyTag = self.session_uf.Obj.CycleObjsInPart(
-                self.work_part.Tag, NXOpen.UF.UFConstants.UF_solid_type, tmpBodyTag)
-            if tmpBodyTag == 0:
+            temp_body_tag = self.session_uf.Obj.CycleObjsInPart(
+                self.work_part.Tag,
+                NXOpen.UF.UFConstants.UF_solid_type,
+                temp_body_tag)
+            if temp_body_tag == 0:
                 break
             else:
-                theType, theSubType = self.session_uf.Obj.AskTypeAndSubtype(
-                    tmpBodyTag)
-                if theSubType == NXOpen.UF.UFConstants.UF_solid_body_subtype:
+                theType, the_subtype = self.session_uf.Obj.AskTypeAndSubtype(
+                    temp_body_tag)
+                if the_subtype == NXOpen.UF.UFConstants.UF_solid_body_subtype:
                     bodies.append(
-                        NXOpen.TaggedObjectManager.GetTaggedObject(tmpBodyTag))
+                        NXOpen.TaggedObjectManager.GetTaggedObject(
+                            temp_body_tag))
         self.bodies = bodies
-        # return bodies
+
+
+def start_multithread_execution(app, chunks):
+    vts = []
+    pts = []
+    threadList = []
+    time1 = tt.time()
+    for index in range(thread_num):
+        set_ = chunks[index]
+        vts.insert(index, [])
+        pts.insert(index, [])
+        threadList.insert(index, threading.Thread(
+            target=app.grab_geometry, args=(set_, vts[index], pts[index])))
+        threadList[index].start()
+    for thread in threadList:
+        thread.join()
+    time2 = tt.time() - time1
+
+
+def start_single_thread_execution(app):
+    v1, p1 = [], []
+    t1 = threading.Thread(target=app.grab_geometry, args=(app.bodies, v1, p1))
+    t1.start()
+    t1.join()
+
+
+def show_report_info(app):
+    app.lw.WriteLine(str(len(app.bodies)))
+    app.lw.WriteLine(str(time2))
+    app.lw.WriteLine('Completed')
 
 
 def main(thread_num=4):
@@ -77,39 +110,16 @@ def main(thread_num=4):
     app.lw.Open()
     app.process_objects()
     app.set_file_cache()
-    chunks = app.chunkIt(thread_num)
-    # multithreading section
+    chunks = app.get_object_chunks(thread_num)
+    time1 = tt.time()
     if len(app.bodies) > 1:
-        vts = []
-        pts = []
-        threadList = []
-        time1 = tt.time()
-        for index in range(thread_num):
-            set_ = chunks[index]
-            vts.insert(index, [])
-            pts.insert(index, [])
-            threadList.insert(index, threading.Thread(
-                target=app.grab_geometry, args=(set_, vts[index], pts[index])))
-            threadList[index].start()
-        for thread in threadList:
-            thread.join()
-        time2 = tt.time() - time1
-    # single thread section
+        start_multithread_execution(app, chunks)
     elif len(app.bodies) == 1:
-        time1 = tt.time()
-        v1, p1 = [], []
-        t1 = threading.Thread(target=app.grab_geometry,
-                              args=(app.bodies, v1, p1))
-        t1.start()
-        t1.join()
-        time2 = tt.time() - time2
+        start_single_thread_execution(app)
     else:
         pass
-    # report section
-    app.lw.WriteLine(str(len(app.bodies)))
-    app.lw.WriteLine(str(time2))
-    app.lw.WriteLine('Completed')
-    return None
+    time2 = tt.time() - time2
+    show_report_info(app)
 
 
 if __name__ == '__main__':
