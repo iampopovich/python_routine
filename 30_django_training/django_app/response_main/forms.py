@@ -29,3 +29,8 @@ class UserForm(forms.Form):
         choices=((0, 'zero'), (1, 'one'), (2, 'two')))
     # widget_pass = forms.PasswordInput()
     # widget_hidden_input = forms.HiddenInput()
+
+
+class CustomForm(forms.Form):
+    field_name = forms.CharField(label="Name_label")
+    field_age = forms.IntegerField(label="Age_label")

@@ -16,4 +16,5 @@ urlpatterns = [
     path('iters/', views.iterators),
     path('forms/', views.user_form),
     path('widgets/', views.widget_form),
+    path('custom_form/', views.custom_form),
 ]
