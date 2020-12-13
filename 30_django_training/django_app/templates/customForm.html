@@ -1,17 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Django custom form</title>
-</head>
-<body>
+<h2>as_table</h2>
 <form method="POST">
-    {% csrf_token %}
-    <table>
-        {{ form }}
-    </table>
-    <input type="submit" value="Send" >
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    </table>
+    <input type="submit" value="Send" >
 </form>
-
-</body>
-</html>
+<h2>as_ul</h2>
+<form method="POST">
+    {% csrf_token %}
+    <ul>
+    {{ form.as_ul }}
+    </ul>
+    <input type="submit" value="Send" >
+</form>
+<h2>as_p</h2>
+<form method="POST">
+    {% csrf_token %}
+    <div>
+    {{ form.as_p }}
+    </div>
+    <input type="submit" value="Send" >
+</form>
