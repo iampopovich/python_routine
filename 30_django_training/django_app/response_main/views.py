@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import UserForm, CustomForm
+from .forms import UserForm, CustomForm, StylesForm
 from .widgets import FormWithWidget
 from django.template.response import TemplateResponse
 from django.http import (
@@ -87,8 +87,20 @@ def custom_form(req):
             return HttpResponse("<h2>Hello, {0}</h2>".format(name))
         else:
             return HttpResponse("Invalid data")
-        return HttpResponse("<h2>You've sent a custom form</h2>")
     else:
         customform = CustomForm(
             field_order=["field_comment", "field_age",  "field_name"])
         return render(req, "customForm.html", {"form": customform})
+
+
+def styles_form(req):
+    if req.method == "POST":
+        styles_form = StylesForm(data=req.POST)
+        if styles_form.is_valid():
+            name = styles_form.cleaned_data["field_name"]
+            return HttpResponse("<h2>Hello, {0}</h2>".format(name))
+        else:
+            return HttpResponse("Invalid data")
+    else:
+        stylesform = StylesForm()
+        return render(req, "userFormStyles.html", {"form": stylesform})

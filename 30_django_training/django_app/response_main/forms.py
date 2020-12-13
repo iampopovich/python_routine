@@ -2,8 +2,8 @@ from django import forms
 
 
 class UserForm(forms.Form):
-    field_name = forms.CharField(required=True, min_length=15, max_length=55)
-    field_age = forms.IntegerField(required=True, min_value=18, max_value=118)
+    field_name = forms.CharField(min_length=5, max_length=55)
+    field_age = forms.IntegerField(min_value=18, max_value=118)
     field_checkbox = forms.BooleanField(required=False)
     field_selection = forms.NullBooleanField(required=False)
     field_text_input = forms.CharField(required=False)
@@ -30,11 +30,18 @@ class UserForm(forms.Form):
 
 
 class CustomForm(forms.Form):
-    field_name = forms.CharField(
-        label="Name_label", initial="Username def", help_text="set your name",
-        min_length=15, max_length=55)
+    field_name = forms.CharField(required=True, label="Name_label",
+                                 initial="Username def",
+                                 help_text="set your name", min_length=15,
+                                 max_length=55)
     field_age = forms.IntegerField(
         label="Age_label", initial=10000, help_text="set your age",
         min_value=18, max_value=118)
     field_comment = forms.CharField(
         label="Comment_label", widget=forms.Textarea, initial="great comment")
+
+
+class StylesForm(CustomForm):
+    required_css_class = "field"
+    error_css_class = "error"
+    

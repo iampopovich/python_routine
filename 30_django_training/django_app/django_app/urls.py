@@ -14,7 +14,8 @@ urlpatterns = [
     path('context/', TemplateView.as_view(template_name="format_context.html")),
     path('cnds/', views.conditions),
     path('iters/', views.iterators),
-    path('forms/', views.user_form),
-    path('widgets/', views.widget_form),
+    path('user_form/', views.user_form),
+    path('widget_form/', views.widget_form),
     path('custom_form/', views.custom_form),
+    path('styles_form/', views.styles_form),
 ]
