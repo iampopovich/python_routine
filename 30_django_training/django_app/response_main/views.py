@@ -80,5 +80,6 @@ def custom_form(req):
     if req.method == "POST":
         return HttpResponse("<h2>You've sent a custom form</h2>")
     else:
-        customform = CustomForm()
+        customform = CustomForm(
+            field_order=["field_comment", "field_age",  "field_name"])
         return render(req, "customForm.html", {"form": customform})
