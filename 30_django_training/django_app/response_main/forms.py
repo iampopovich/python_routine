@@ -44,4 +44,7 @@ class CustomForm(forms.Form):
 class StylesForm(CustomForm):
     required_css_class = "field"
     error_css_class = "error"
-    
+
+class DatabaseForm(forms.Form):
+    field_name = forms.CharField(min_length=5, max_length=55)
+    field_age = forms.IntegerField(min_value=18, max_value=118)
