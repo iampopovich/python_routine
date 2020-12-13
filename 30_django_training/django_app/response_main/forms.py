@@ -42,4 +42,6 @@ class CustomForm(forms.Form):
 
 
 class StylesForm(CustomForm):
-    pass
+    required_css_class = "field"
+    error_css_class = "error"
+    
