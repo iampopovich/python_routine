@@ -26,13 +26,14 @@ class UserForm(forms.Form):
     field_decimal_value = forms.DecimalField(required=False)
     field_float_value = forms.FloatField(required=False)
     field_choice = forms.ChoiceField(required=False,
-                                     choices=((0, 'zero'), (1, 'one'), (2, 'two')))
+        choices=((0, 'zero'), (1, 'one'), (2, 'two')))
 
 
 class CustomForm(forms.Form):
-    field_name = forms.CharField(
-        label="Name_label", initial="Username def", help_text="set your name",
-        min_length=15, max_length=55)
+    field_name = forms.CharField(required=True, label="Name_label",
+                                 initial="Username def",
+                                 help_text="set your name", min_length=15,
+                                 max_length=55)
     field_age = forms.IntegerField(
         label="Age_label", initial=10000, help_text="set your age",
         min_value=18, max_value=118)
