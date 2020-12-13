@@ -32,5 +32,7 @@ class UserForm(forms.Form):
 
 
 class CustomForm(forms.Form):
-    field_name = forms.CharField(label="Name_label")
-    field_age = forms.IntegerField(label="Age_label")
+    field_name = forms.CharField(label="Name_label", initial="Username kokoko")
+    field_age = forms.IntegerField(label="Age_label", initial=10000)
+    field_comment = forms.CharField(
+        label="Comment_label", widget=forms.Textarea, initial="great comment")
