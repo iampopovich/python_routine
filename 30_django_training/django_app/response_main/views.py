@@ -121,5 +121,28 @@ def all_persons(req):
     return render(req, "all_persons.html", {"persons": persons})
 
 
+def edit_person(req, id):
+    try:
+        person = Person.objects.get(id=id)
+        if req.method == "POST":
+            person.name = req.POST.get("name")
+            person.age = req.POST.get("age")
+            person.save()
+            return HttpResponseRedirect("/all_persons")
+        else:
+            return render(req, "edit_person.html", {"person": person})
+    except Person.DoesNotExist:
+        return HttpResponseNotFound("<h2>Person not found</h2>")
+
+
+def remove_person(req, id):
+    try:
+        person = Person.objects.get(id=id)
+        person.delete()
+        return HttpResponseRedirect("all_users")
+    except Person.DoesNotExist:
+        return HttpResponseNotFound("<h2>Person not found</h2>")
+
+
 def remove_person(req):
     pass

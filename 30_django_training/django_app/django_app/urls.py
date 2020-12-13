@@ -20,5 +20,6 @@ urlpatterns = [
     path('styles_form/', views.styles_form),
     path('all_persons/', views.all_persons),
     path('all_persons/add_person/', views.add_person),
-    path('remove_person/', views.remove_person),
+    path('all_persons/remove_person/<int:id>', views.remove_person),
+    path('all_persons/edit_person/<int:id>', views.edit_person),
 ]
