@@ -95,7 +95,12 @@ def custom_form(req):
 
 def styles_form(req):
     if req.method == "POST":
-        return HttpResponse("<h2>You've sent a widget form</h2>")
+        styles_form = StylesForm(data=req.POST)
+        if styles_form.is_valid():
+            name = styles_form.cleaned_data["field_name"]
+            return HttpResponse("<h2>Hello, {0}</h2>".format(name))
+        else:
+            return HttpResponse("Invalid data")
     else:
         stylesform = StylesForm()
         return render(req, "userFormStyles.html", {"form": stylesform})
