@@ -27,5 +27,10 @@ class UserForm(forms.Form):
     field_float_value = forms.FloatField()
     field_choice = forms.ChoiceField(
         choices=((0, 'zero'), (1, 'one'), (2, 'two')))
-    # widget_pass = forms.PasswordInput()
-    # widget_hidden_input = forms.HiddenInput()
+
+
+class CustomForm(forms.Form):
+    field_name = forms.CharField(label="Name_label", initial="Username kokoko")
+    field_age = forms.IntegerField(label="Age_label", initial=10000)
+    field_comment = forms.CharField(
+        label="Comment_label", widget=forms.Textarea, initial="great comment")
