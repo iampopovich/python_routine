@@ -19,6 +19,6 @@ urlpatterns = [
     path('custom_form/', views.custom_form),
     path('styles_form/', views.styles_form),
     path('all_persons/', views.all_persons),
-    path('add_person/', views.add_person),
+    path('all_persons/add_person/', views.add_person),
     path('remove_person/', views.remove_person),
 ]

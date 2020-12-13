@@ -113,7 +113,7 @@ def add_person(req):
         person.name = req.POST.get("name")
         person.age = req.POST.get("age")
         person.save()
-    return HttpResponseRedirect("/")
+    return HttpResponseRedirect("/all_persons")
 
 
 def all_persons(req):
