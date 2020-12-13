@@ -107,14 +107,19 @@ def styles_form(req):
         return render(req, "userFormStyles.html", {"form": form})
 
 
-def add_user(req):
-    pass
+def add_person(req):
+    if req.method == "POST":
+        person = Person()
+        person.name = req.POST.get("name")
+        person.age = req.POST.get("age")
+        person.save()
+    return HttpResponseRedirect("/")
 
 
-def all_users(req):
-    users = Person.objects.all()
-    return render(req, "all_users.html", {"users": users})
+def all_persons(req):
+    persons = Person.objects.all()
+    return render(req, "all_persons.html", {"persons": persons})
 
 
-def remove_user(req):
+def remove_person(req):
     pass
