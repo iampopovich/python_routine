@@ -36,3 +36,4 @@ class CustomForm(forms.Form):
     field_age = forms.IntegerField(label="Age_label", initial=10000)
     field_comment = forms.CharField(
         label="Comment_label", widget=forms.Textarea, initial="great comment")
+    field_order = ["field_age", "field_comment", "field_name"]
