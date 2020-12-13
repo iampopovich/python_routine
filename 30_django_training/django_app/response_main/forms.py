@@ -2,8 +2,8 @@ from django import forms
 
 
 class UserForm(forms.Form):
-    field_name = forms.CharField(required=False)
-    field_age = forms.IntegerField(required=False)
+    field_name = forms.CharField(required=True, min_length=15, max_length=55)
+    field_age = forms.IntegerField(required=True, min_value=18, max_value=118)
     field_checkbox = forms.BooleanField(required=False)
     field_selection = forms.NullBooleanField(required=False)
     field_text_input = forms.CharField(required=False)
