@@ -2,8 +2,8 @@ from django import forms
 
 
 class UserForm(forms.Form):
-    field_name = forms.CharField(required=True, min_length=15, max_length=55)
-    field_age = forms.IntegerField(required=True, min_value=18, max_value=118)
+    field_name = forms.CharField(initial='', min_length=15, max_length=55)
+    field_age = forms.IntegerField(initial=17, min_value=18, max_value=118)
     field_checkbox = forms.BooleanField(required=False)
     field_selection = forms.NullBooleanField(required=False)
     field_text_input = forms.CharField(required=False)
@@ -26,7 +26,7 @@ class UserForm(forms.Form):
     field_decimal_value = forms.DecimalField(required=False)
     field_float_value = forms.FloatField(required=False)
     field_choice = forms.ChoiceField(required=False,
-        choices=((0, 'zero'), (1, 'one'), (2, 'two')))
+                                     choices=((0, 'zero'), (1, 'one'), (2, 'two')))
 
 
 class CustomForm(forms.Form):
@@ -38,3 +38,7 @@ class CustomForm(forms.Form):
         min_value=18, max_value=118)
     field_comment = forms.CharField(
         label="Comment_label", widget=forms.Textarea, initial="great comment")
+
+
+class StylesForm(UserForm):
+   pass
