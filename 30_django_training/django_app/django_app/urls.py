@@ -18,4 +18,7 @@ urlpatterns = [
     path('widget_form/', views.widget_form),
     path('custom_form/', views.custom_form),
     path('styles_form/', views.styles_form),
+    path('all_users/', views.all_users),
+    path('add_user/', views.add_user),
+    path('remove_user/', views.remove_user),
 ]

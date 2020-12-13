@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from .forms import UserForm, CustomForm, StylesForm
+from .models import Person
+from .forms import UserForm, CustomForm, StylesForm, DatabaseForm
 from .widgets import FormWithWidget
 from django.template.response import TemplateResponse
 from django.http import (
@@ -60,15 +61,15 @@ def iterators(req):
 
 def user_form(req):
     if req.method == "POST":
-        userform = UserForm(data=req.POST)
-        if userform.is_valid():
-            name = userform.cleaned_data["field_name"]
+        form = UserForm(data=req.POST)
+        if form.is_valid():
+            name = form.cleaned_data["field_name"]
             return HttpResponse("<h2>Hello, {0}</h2>".format(name))
         else:
             return HttpResponse("Invalid data")
     else:
-        userform = UserForm()
-        return render(req, "userForm.html", {"form": userform})
+        form = UserForm()
+        return render(req, "userForm.html", {"form": form})
 
 
 def widget_form(req):
@@ -81,26 +82,39 @@ def widget_form(req):
 
 def custom_form(req):
     if req.method == "POST":
-        custom_form = CustomForm(data=req.POST)
-        if custom_form.is_valid():
-            name = custom_form.cleaned_data["field_name"]
+        form = CustomForm(data=req.POST)
+        if form.is_valid():
+            name = form.cleaned_data["field_name"]
             return HttpResponse("<h2>Hello, {0}</h2>".format(name))
         else:
             return HttpResponse("Invalid data")
     else:
-        customform = CustomForm(
+        form = CustomForm(
             field_order=["field_comment", "field_age",  "field_name"])
-        return render(req, "customForm.html", {"form": customform})
+        return render(req, "customForm.html", {"form": form})
 
 
 def styles_form(req):
     if req.method == "POST":
-        styles_form = StylesForm(data=req.POST)
-        if styles_form.is_valid():
-            name = styles_form.cleaned_data["field_name"]
+        form = StylesForm(data=req.POST)
+        if form.is_valid():
+            name = form.cleaned_data["field_name"]
             return HttpResponse("<h2>Hello, {0}</h2>".format(name))
         else:
             return HttpResponse("Invalid data")
     else:
-        stylesform = StylesForm()
-        return render(req, "userFormStyles.html", {"form": stylesform})
+        form = StylesForm()
+        return render(req, "userFormStyles.html", {"form": form})
+
+
+def add_user(req):
+    pass
+
+
+def all_users(req):
+    users = Person.objects.all()
+    return render(req, "all_users.html", {"users": users})
+
+
+def remove_user(req):
+    pass
