@@ -60,9 +60,12 @@ def iterators(req):
 
 def user_form(req):
     if req.method == "POST":
-        name = req.POST.get("name")
-        age = req.POST.get("age")
-        return HttpResponse("<h2>Hello, {0}, heh {1}</h2>".format(name, age))
+        userform = UserForm(data=req.POST)
+        if userform.is_valid():
+            name = userform.cleaned_data["field_name"]
+            return HttpResponse("<h2>Hello, {0}</h2>".format(name))
+        else:
+            return HttpResponse("Invalid data")
     else:
         userform = UserForm()
         return render(req, "userForm.html", {"form": userform})
@@ -78,6 +81,12 @@ def widget_form(req):
 
 def custom_form(req):
     if req.method == "POST":
+        custom_form = CustomForm(data=req.POST)
+        if custom_form.is_valid():
+            name = custom_form.cleaned_data["field_name"]
+            return HttpResponse("<h2>Hello, {0}</h2>".format(name))
+        else:
+            return HttpResponse("Invalid data")
         return HttpResponse("<h2>You've sent a custom form</h2>")
     else:
         customform = CustomForm(
