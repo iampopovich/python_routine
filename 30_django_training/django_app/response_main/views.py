@@ -159,8 +159,14 @@ def add_company(req):
 
 
 def show_company(req, id):
-    company = Company.objects.get(id=id)
-    products = Product.objects.all()
+    try:
+        company = Company.objects.get(id=id)
+    except Company.DoesNotExist:
+        return HttpResponseNotFound("<h2>Company not found</h2>")
+    try:
+        products = Product.objects.get(company= company.name)
+    except Product.DoesNotExist:
+        return HttpResponseNotFound("<h2>No product found</h2>")
     return render(req, "company.html", {"company": company, "products": products})
 
 
