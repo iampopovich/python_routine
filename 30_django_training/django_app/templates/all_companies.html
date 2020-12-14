@@ -6,13 +6,11 @@
 </head>
 <body class="container">
     <form method="POST" action="/add_company/">
-        {% csrf_token %}
-        <p>
-            <label>Введите название компании</label><br>
-            <input type="text" name="name" />
-        </p>
-        <input type="submit" value="Сохранить" >
-    </form>
+    {% csrf_token %}
+    <table>
+        {{ form }}
+    </table>
+    <input type="submit" value="Send" >
     {% if companies.count > 0 %}
     <h2>Список компаний</h2>
     <table>
