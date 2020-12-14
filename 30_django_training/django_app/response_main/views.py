@@ -164,7 +164,7 @@ def show_company(req, id):
     except Company.DoesNotExist:
         return HttpResponseNotFound("<h2>Company not found</h2>")
     try:
-        products = Product.objects.get(company= company.name)
+        products = Product.objects.filter(company=id)
     except Product.DoesNotExist:
         return HttpResponseNotFound("<h2>No product found</h2>")
     return render(req, "company.html", {"company": company, "products": products})
@@ -177,3 +177,20 @@ def remove_company(req, id):
         return HttpResponseRedirect("/all_companies")
     except Company.DoesNotExist:
         return HttpResponseNotFound("<h2>Company not found</h2>")
+
+
+def all_products(req):
+    companies = Company.objects.all()
+    products = Product.objects.all()
+    return render(req, "all_products.html",
+                  {"companies": companies, "products": products})
+
+
+def create_product(req):
+    if req.method == "POST":
+        product = Product()
+        product.name = req.POST.get("name")
+        product.price = req.POST.get("price")
+        product.company = Company.objects.get(name=req.POST.get("company"))
+        product.save()
+    return HttpResponseRedirect("/all_products")

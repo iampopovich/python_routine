@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Модели в Django</title>
+</head>
+<body class="container">
+    <form method="POST" action="/create_product/">
+        {% csrf_token %}
+        <p>
+            <label>Компания - изготовитель</label><br>
+            <select name="company">
+            {% for company in companies %}
+            <option value="{{ company.name }}">{{ company.name }}</option>
+            {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label>Введите название продукта</label><br>
+            <input type="text" name="name" />
+        </p>
+        <p>
+            <label>Введите цену продукта</label><br>
+            <input type="text" name="price" />
+        </p>
+        <input type="submit" value="Сохранить" >
+    </form>
+    {% if products.count > 0 %}
+    <h2>Список компаний</h2>
+    <table>
+        <thead><th>Id</th><th>Имя</th><th>Цена</th><th>Компания</th></thead>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td>{{ product.name}}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.company.name }}</td>
+            <td>
+                <button>
+                    <a href="/edit_product/{{product.id}}">Изменить</a>
+                </button>
+                <button>
+                    <a href="/remove_producty/{{product.id}}">Удалить</a>
+                </button>
+             </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</body>
+</html>
