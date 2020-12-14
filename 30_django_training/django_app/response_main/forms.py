@@ -1,5 +1,5 @@
 from django import forms
-
+from .models import Person, Company, Product
 
 class UserForm(forms.Form):
     field_name = forms.CharField(min_length=5, max_length=55)
@@ -26,7 +26,7 @@ class UserForm(forms.Form):
     field_decimal_value = forms.DecimalField(required=False)
     field_float_value = forms.FloatField(required=False)
     field_choice = forms.ChoiceField(required=False,
-        choices=((0, 'zero'), (1, 'one'), (2, 'two')))
+                                     choices=((0, 'zero'), (1, 'one')))
 
 
 class CustomForm(forms.Form):
@@ -45,10 +45,17 @@ class StylesForm(CustomForm):
     required_css_class = "field"
     error_css_class = "error"
 
-# class DatabaseForm(forms.Form):
-#     field_name = forms.CharField(min_length=5, max_length=55)
-#     field_age = forms.IntegerField(min_value=18, max_value=118)
 
 class CreateCompanyForm(forms.Form):
     name = forms.CharField(min_length=5, max_length=55)
 
+
+class CreateProductForm(forms.Form):
+    choices = []
+    for _id, item in enumerate(Company.objects.all()):
+        choices.append((_id,item.name))
+    print(choices)
+    company = forms.ChoiceField(required=False,
+                                 choices=choices)
+    name = forms.CharField(min_length=5, max_length=55)
+    price = forms.IntegerField(min_value=1)

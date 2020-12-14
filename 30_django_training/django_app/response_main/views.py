@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Person, Company, Product
-from .forms import UserForm, CustomForm, StylesForm, CreateCompanyForm
+from .forms import (
+    UserForm, CustomForm, StylesForm, CreateCompanyForm, CreateProductForm,)
 from .widgets import FormWithWidget
 from django.template.response import TemplateResponse
 from django.http import (
@@ -185,8 +186,9 @@ def remove_company(req, id):
 def all_products(req):
     companies = Company.objects.all()
     products = Product.objects.all()
+    form = CreateProductForm()
     return render(req, "all_products.html",
-                  {"companies": companies, "products": products})
+                  {"products": products, "form": form})
 
 
 def create_product(req):
