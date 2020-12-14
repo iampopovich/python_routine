@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Person, Company, Product
-from .forms import UserForm, CustomForm, StylesForm, DatabaseForm
+from .forms import (
+    UserForm, CustomForm, StylesForm, CreateCompanyForm, CreateProductForm,)
 from .widgets import FormWithWidget
 from django.template.response import TemplateResponse
 from django.http import (
@@ -147,7 +148,9 @@ def remove_person(req, id):
 
 def show_companies(req):
     companies = Company.objects.all()
-    return render(req, "all_companies.html", {"companies": companies})
+    form = CreateCompanyForm()
+    return render(req, "all_companies.html",
+                  {"companies": companies, "form": form})
 
 
 def add_company(req):
@@ -167,7 +170,8 @@ def show_company(req, id):
         products = Product.objects.filter(company=id)
     except Product.DoesNotExist:
         return HttpResponseNotFound("<h2>No product found</h2>")
-    return render(req, "company.html", {"company": company, "products": products})
+    return render(req, "company.html",
+                  {"company": company, "products": products})
 
 
 def remove_company(req, id):
@@ -182,8 +186,9 @@ def remove_company(req, id):
 def all_products(req):
     companies = Company.objects.all()
     products = Product.objects.all()
+    form = CreateProductForm()
     return render(req, "all_products.html",
-                  {"companies": companies, "products": products})
+                  {"products": products, "form": form})
 
 
 def create_product(req):
