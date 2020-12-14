@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Person
+from .models import Person, Company, Product
 from .forms import UserForm, CustomForm, StylesForm, DatabaseForm
 from .widgets import FormWithWidget
 from django.template.response import TemplateResponse
@@ -144,5 +144,16 @@ def remove_person(req, id):
         return HttpResponseNotFound("<h2>Person not found</h2>")
 
 
-def remove_person(req):
+def show_companies(req):
+    companies = Company.objects.all()
+    return render(req, "all_companies.html", {"companies": companies})
+
+def add_company(req):
+    if req.method == "POST":
+        company = Company()
+        company.name = req.POST.get("name")
+        company.save()
+    return HttpResponseRedirect("/all_companies")
+
+def show_company(req, id):
     pass
