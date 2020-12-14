@@ -1,12 +1,13 @@
 from django.shortcuts import render
-from .models import Person
+from .models import Person, Company, Product
 from .forms import UserForm, CustomForm, StylesForm, DatabaseForm
 from .widgets import FormWithWidget
 from django.template.response import TemplateResponse
 from django.http import (
     HttpResponse,
     HttpResponseRedirect,
-    HttpResponsePermanentRedirect
+    HttpResponsePermanentRedirect,
+    HttpResponseNotFound
 )
 
 
@@ -121,5 +122,58 @@ def all_persons(req):
     return render(req, "all_persons.html", {"persons": persons})
 
 
-def remove_person(req):
-    pass
+def edit_person(req, id):
+    try:
+        person = Person.objects.get(id=id)
+        if req.method == "POST":
+            person.name = req.POST.get("name")
+            person.age = req.POST.get("age")
+            person.save()
+            return HttpResponseRedirect("/all_persons")
+        else:
+            return render(req, "edit_person.html", {"person": person})
+    except Person.DoesNotExist:
+        return HttpResponseNotFound("<h2>Person not found</h2>")
+
+
+def remove_person(req, id):
+    try:
+        person = Person.objects.get(id=id)
+        person.delete()
+        return HttpResponseRedirect("all_users")
+    except Person.DoesNotExist:
+        return HttpResponseNotFound("<h2>Person not found</h2>")
+
+
+def show_companies(req):
+    companies = Company.objects.all()
+    return render(req, "all_companies.html", {"companies": companies})
+
+
+def add_company(req):
+    if req.method == "POST":
+        company = Company()
+        company.name = req.POST.get("name")
+        company.save()
+    return HttpResponseRedirect("/all_companies")
+
+
+def show_company(req, id):
+    try:
+        company = Company.objects.get(id=id)
+    except Company.DoesNotExist:
+        return HttpResponseNotFound("<h2>Company not found</h2>")
+    try:
+        products = Product.objects.get(company= company.name)
+    except Product.DoesNotExist:
+        return HttpResponseNotFound("<h2>No product found</h2>")
+    return render(req, "company.html", {"company": company, "products": products})
+
+
+def remove_company(req, id):
+    try:
+        company = Company.objects.get(id=id)
+        company.delete()
+        return HttpResponseRedirect("/all_companies")
+    except Company.DoesNotExist:
+        return HttpResponseNotFound("<h2>Company not found</h2>")
