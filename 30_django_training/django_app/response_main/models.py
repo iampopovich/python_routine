@@ -33,3 +33,13 @@ class TestModelAllTypes(models.Model):
     field_slug = models.SlugField()
     field_url = models.URLField()
     field_uuid = models.UUIDField()
+
+
+class Company(models.Model):
+    name = models.CharField(max_length=50)
+
+
+class Product(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    price = models.IntegerField()
