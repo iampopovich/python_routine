@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Модели в Django</title>
+</head>
+<body class="container">
+	<h2>Info about {{ company.name }}</h2>
+    {% if products.count > 0 %}
+    <h2>Список товаров</h2>
+    <table>
+        <thead><th>Id</th><th>Имя</th></thead>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</body>
+</html>

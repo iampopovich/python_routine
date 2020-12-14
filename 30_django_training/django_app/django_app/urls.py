@@ -23,5 +23,7 @@ urlpatterns = [
     path('all_persons/remove_person/<int:id>', views.remove_person),
     path('all_persons/edit_person/<int:id>', views.edit_person),
     path('all_companies/', views.show_companies),
+    path('add_company/', views.add_company),
+    path('remove_company/<int:id>', views.remove_company),
     path('company/<int:id>', views.show_company),
 ]

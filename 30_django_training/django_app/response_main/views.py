@@ -6,7 +6,8 @@ from django.template.response import TemplateResponse
 from django.http import (
     HttpResponse,
     HttpResponseRedirect,
-    HttpResponsePermanentRedirect
+    HttpResponsePermanentRedirect,
+    HttpResponseNotFound
 )
 
 
@@ -148,6 +149,7 @@ def show_companies(req):
     companies = Company.objects.all()
     return render(req, "all_companies.html", {"companies": companies})
 
+
 def add_company(req):
     if req.method == "POST":
         company = Company()
@@ -155,5 +157,17 @@ def add_company(req):
         company.save()
     return HttpResponseRedirect("/all_companies")
 
+
 def show_company(req, id):
-    pass
+    company = Company.objects.get(id=id)
+    products = Product.objects.all()
+    return render(req, "company.html", {"company": company, "products": products})
+
+
+def remove_company(req, id):
+    try:
+        company = Company.objects.get(id=id)
+        company.delete()
+        return HttpResponseRedirect("/all_companies")
+    except Company.DoesNotExist:
+        return HttpResponseNotFound("<h2>Company not found</h2>")
