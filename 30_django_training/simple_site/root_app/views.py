@@ -3,4 +3,4 @@ from django.http import HttpResponse
 
 
 def index(request):
-	return HttpResponse('<h1>mooo pitch!</h1>')
+	return render(request, 'root_app/main_page.html', {})
