@@ -4,8 +4,8 @@ from datetime import date, datetime
 
 
 def index(request):
-    is_true = datetime.now().month == 12
-    return render(request, 'root_app/main_page.html', {"is_true":is_true})
+    # is_true = datetime.now().month == 12
+    return render(request, 'root_app/main_page.html',{})#, {"is_true":is_true})
 
 
 def contact(request):

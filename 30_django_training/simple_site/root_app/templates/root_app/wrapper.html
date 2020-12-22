@@ -17,7 +17,8 @@
     {% endblock %}
 </div>
 <div class="row">
-    {% if is_true %}
+    {% now "m" as month %}
+    {% if month != 12 %}
         {% load static%}
         <img src="{%static 'root_app/images/peke.gif' %}">
     {% else %}
