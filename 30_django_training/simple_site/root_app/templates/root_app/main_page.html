@@ -1,18 +1,7 @@
 {% extends "root_app/wrapper.html" %}
-
 {% block content %}
-
 <div class="row">
 <h2> wrapper wroks fine </h2>
 {% include "root_app/includes/included_html.html"%}
-</div>
-<div class="row">
-<a href="/" class="btn btn-success">Главная</a>
-<a href="/news" class="btn btn-primary">Новости</a>
-<a href="/contacts" class="btn btn-info">Контакты</a>
-</div>
-<div class="row">
-{% load static%}
-<img src="{%static 'root_app/images/pipa.jpg' %}">
 </div>
 {% endblock %}
