@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'styled_app',
     'root_app',
+    'news',
 ]
 
 MIDDLEWARE = [
