@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    {%load static%}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}" type="text/css">
+</head>
+<body style="background-color: #999999">
+
+    <div class="row">
+<a href="/" class="btn btn-success">Главная</a>
+<a href="/news" class="btn btn-primary">Новости</a>
+<a href="/contacts" class="btn btn-info">Контакты</a>
+</div>
+<div class="row">
+        {% block content %}
+    {% endblock %}
+</div>
+<div class="row">
+    {% now "m" as month %}
+    {% if month != 12 %}
+        {% load static%}
+        <img src="{%static 'root_app/images/peke.gif' %}">
+    {% else %}
+        {% load static%}
+        <img src="{%static 'root_app/images/pipa.jpg' %}">
+    {% endif %}
+</div>
+</body>
+</html>
