@@ -1,0 +1,7 @@
+{% extends "root_app/wrapper.html" %}
+
+{% block content %}
+	<h2 class="text-danger">{{articles.title}}</h2>
+	<h6 class="text-danger">Published: {{articles.date|date:"Y-m-d"}}</h6>
+	<h6 class="text-danger">{{articles.post|safe|linebreaks}}</h6>
+{% endblock %}
