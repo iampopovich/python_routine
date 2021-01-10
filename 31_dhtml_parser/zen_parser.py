@@ -5,28 +5,26 @@ import time
 import logging
 
 
-def init_browser():
-    logging.info("инициализирую браузер")
-    browser = webdriver.Chrome(executable_path="./chromedriver_mac")
-    logging.info("браузер инициализирован")
-    return browser
+class Browser(webdriver.Chrome):
 
+    def get_yandex_zen(self):
+        try:
+            self.get("https://zen.yandex.ru/")
+            time.sleep(5)
+        except Exception as ex:
+            if self:
+                self.quit()
+            raise ex
 
-def get_yandex_zen(browser):
-    try:
-        browser.get("https://zen.yandex.ru/")
-        time.sleep(5)
-    except Exception as ex:
-        if browser:
-            browser.quit()
-        raise ex
+    def scroll_and_parse_zen(self):
+        pass
 
 
 def main():
-    browser = None
     try:
-        browser = init_browser()
-        get_yandex_zen(browser)
+        browser = Browser(executable_path="./chromedriver_mac")
+        browser.get_yandex_zen()
+        browser.scroll_and_parse_zen()
     except Exception as ex:
         if browser:
             browser.quit()
