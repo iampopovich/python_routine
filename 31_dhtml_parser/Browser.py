@@ -3,7 +3,6 @@ from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 import logging
 import time
-import random
 
 
 class Browser(webdriver.Chrome):
@@ -41,23 +40,22 @@ class Browser(webdriver.Chrome):
         time.sleep(1)
 
     def leave_zen_feedback(self, soup):
-        feedback = soup.find_all("div", {"class": "single-choice-image__item"})
+        feedback = self.find_elements_by_class_name("single-choice-image__item-image")
         if feedback:
-            for option in feedback:
-                print(option)
+            print("FEEDBACK OPTIONS APPEAR AT: {}".format(time.time()))
+        # self.leave_zen_good_feedback()
 
-    def check_is_carousel_appears(self):
-        pass
-    
+    def check_is_carousel_appears(self, soup):
+        carousel = soup.find_all("div", {"class": "personal-carousel-view__carousel"})
+        if carousel:
+            print("CAROUSEL APPEARS {} AT: {}".format(carousel.__len__(),time.time()))
+
     def leave_zen_good_feedback(self):
         pass
 
-    def leave_zen_nwutral_feedback(self):
+    def leave_zen_neutral_feedback(self):
         pass
 
     def leave_zen_bad_feedback(self):
         pass
 
-# single-choice-image__list
-# single-choice-image__item
-#personal-carousel-view__carousel
