@@ -25,6 +25,7 @@ class BrowserBaseTest_unittest(unittest.TestCase):
                 if request.response.url == "https://zen.yandex.ru/":
                     print(request.response)
                     self.assertEqual(request.response.status_code, 200)
+            del browser.requests
         except:
             if browser:
                 browser.quit()
