@@ -10,5 +10,6 @@ urlpatterns = [
     path(r'<int:pk>', DetailView.as_view(
         model=Articles,
         template_name='news/post.html')),
-    re_path(r'^get_all_articles$', views.get_all_articles)
+    re_path(r'^get_all_articles$', views.get_all_articles),
+    re_path(r'^get_serialized_data$', views.get_serialized_data)
 ]
